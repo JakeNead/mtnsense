@@ -2,19 +2,19 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [avyReport, setAvyReport] = useState<string | null>(null);
+  const [avyReport, setAvyReport] = useState<string[] | null>(null);
 
   useEffect(() => {
     async function fetchAvyReport() {
       try {
         const response = await fetch("http://localhost:3000/rogersPass/report");
         if (!response.ok)
-          throw new Error(`Uh oh, HTTP error! status ${response.status}`);
+          throw new Error(`Something went wrong. Status: ${response.status}`);
         const data: { avyReport: string } = await response.json();
 
         setAvyReport(data.avyReport);
       } catch (err) {
-        console.error("Error fetching avalanche forecast: ", err);
+        console.error("Error fetching avalanche report: ", err);
       }
     }
     fetchAvyReport();
@@ -31,7 +31,11 @@ function App() {
         src="https://avalanche.ca/map"
       ></iframe>
       <h2>Report</h2>
-      {avyReport ? <p>{avyReport}</p> : <p>Loading avalanche report...</p>}
+      {avyReport ? (
+        avyReport.map((text) => <p>{text}</p>)
+      ) : (
+        <p>Loading avalanche report...</p>
+      )}
       <h2>Weather</h2>
       <div>weather info goes here</div>
     </>
