@@ -1,18 +1,23 @@
 import express from "express";
 import puppeteer from "puppeteer";
-import dotenv from "dotenv";
-import cors from "cors";
 import sanitizeHtml from "sanitize-html";
+import asyncHandler from "express-async-handler";
+const revelstokeRouter = express.Router();
 
-dotenv.config();
-const app = express();
-const port = process.env.PORT || 3001;
+revelstokeRouter.get("/forecast", (req, res) => {
+  res.send("forecast page");
+});
 
-// fix cors issue in prod!!!
-app.use(cors());
-// fix cors issue in prod!!!
+revelstokeRouter.get("/avyMap", (req, res) => {
+  res.send("avy map page");
+});
 
-app.get("/revelstoke/report", async (req, res) => {
+// revelstokeRouter.get("/report", (req, res) => {
+//   res.send("report page");
+
+// });
+
+revelstokeRouter.get("/report", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -48,6 +53,4 @@ app.get("/revelstoke/report", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+export default revelstokeRouter;

@@ -8,12 +8,13 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "serve": "node --watch server.js"
+    "serve": "node --watch server/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-async-handler": "^1.2.0",
     "puppeteer": "^23.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
