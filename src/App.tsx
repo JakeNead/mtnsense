@@ -7,7 +7,7 @@ function App() {
   useEffect(() => {
     async function fetchAvyReport() {
       try {
-        const response = await fetch("http://localhost:3000/revelstoke/report");
+        const response = await fetch("http://localhost:3000/rogersPass/report");
         if (!response.ok)
           throw new Error(`Uh oh, HTTP error! status ${response.status}`);
         const data: { avyReport: string } = await response.json();

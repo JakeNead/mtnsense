@@ -1,7 +1,7 @@
 import express from "express";
-import revelstokeRouter from "./revelstoke.js";
+import rogersPassRouter from "./rogersPass.js";
 const router = express.Router();
 
-router.use("/revelstoke", revelstokeRouter);
+router.use("/rogersPass", rogersPassRouter);
 
 export default router;

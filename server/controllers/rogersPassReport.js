@@ -2,7 +2,7 @@ import expressAsyncHandler from "express-async-handler";
 import puppeteer from "puppeteer";
 import sanitizeHtml from "sanitize-html";
 
-const revelstokeReport = expressAsyncHandler(async (req, res) => {
+const rogersPassReport = expressAsyncHandler(async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -38,4 +38,4 @@ const revelstokeReport = expressAsyncHandler(async (req, res) => {
   }
 });
 
-export default revelstokeReport;
+export default rogersPassReport;
