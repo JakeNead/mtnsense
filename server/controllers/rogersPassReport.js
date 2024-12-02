@@ -16,18 +16,36 @@ const rogersPassReport = expressAsyncHandler(async (req, res) => {
     );
 
     const avyReport = await page.evaluate(() => {
-      const parentElement = document.querySelector(
+      const selectedElements = [];
+
+      const title = document
+        .querySelector(
+          "#content-area > article > div.header-wrapper > div.columns-2 > div:nth-child(2) > span"
+        )
+        .getAttribute("content");
+      selectedElements.push(title);
+
+      const date = document.querySelector(
+        "#content-area > article > div.header-wrapper > div.submitted > p"
+      ).textContent;
+      selectedElements.push(date);
+
+      const content = document.querySelector(
         "#content-area > article > div.content > div.field.field-name-body.field-type-text-with-summary.field-label-hidden > div > div"
       );
-      if (!parentElement) return null;
-      const selectedElements = Array.from(parentElement.children).map((child) =>
+      if (!content) return null;
+
+      const contentText = Array.from(content.children).map((child) =>
         child.textContent.trim()
       );
+      selectedElements.push(...contentText);
 
       return selectedElements;
     });
 
-    const sanitizedReport = avyReport.map((content) => sanitizeHtml(content));
+    const sanitizedReport = avyReport.map((content) =>
+      sanitizeHtml(String(content))
+    );
 
     await browser.close();
 
