@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./App.css";
+import "../App.css";
 
 function RogersPass() {
   const [avyReport, setAvyReport] = useState<string[] | null>(null);
@@ -58,7 +58,7 @@ function RogersPass() {
       ></iframe>
       <h2>Report</h2>
       {avyReport ? (
-        avyReport.map((text) => <p>{text}</p>)
+        avyReport.map((text, index) => <p key={index}>{text}</p>)
       ) : (
         <p>Loading avalanche report...</p>
       )}
