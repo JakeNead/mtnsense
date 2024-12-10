@@ -11,8 +11,8 @@ const Menu = () => {
   return (
     <MenuRoot>
       <MenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          Region
+        <Button variant="surface" size="md">
+          Zone
         </Button>
       </MenuTrigger>
       <MenuContent>
