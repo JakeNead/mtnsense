@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "../App.css";
+import { Text, Heading, Image } from "@chakra-ui/react";
+import MapComponent from "../MapComponent";
 
 function RogersPass() {
   const [avyReport, setAvyReport] = useState<string[] | null>(null);
@@ -11,8 +13,7 @@ function RogersPass() {
         const response = await fetch("http://localhost:3000/rogersPass/report");
         if (!response.ok)
           throw new Error(`Something went wrong. Status: ${response.status}`);
-        const data: { avyReport: string } = await response.json();
-
+        const data: { avyReport: string[] } = await response.json();
         setAvyReport(data.avyReport);
       } catch (err) {
         console.error("Error fetching avalanche report: ", err);
@@ -48,29 +49,30 @@ function RogersPass() {
 
   return (
     <>
-      <h1>Rogers Pass, BC</h1>
-      <h2>Webcam</h2>
-      <img src="https://cache.drivebc.ca/bchighwaycam/pub/cameras/101.jpg"></img>
-      <h2>Avalanche Map</h2>
+      <Heading>Rogers Pass, BC</Heading>
+      <Heading>Webcam</Heading>
+      <Image src="https://cache.drivebc.ca/bchighwaycam/pub/cameras/101.jpg"></Image>
+      {/* <MapComponent /> */}
+      <Heading>Avalanche Map</Heading>
       <iframe
         style={{ width: "90vw", height: "80vw" }}
-        src="https://avalanche.ca/map"
+        src="https://avalanche.ca/map?lat=51.300243&lng=-117.540345"
       ></iframe>
-      <h2>Report</h2>
+      <Heading>Report</Heading>
       {avyReport ? (
-        avyReport.map((text, index) => <p key={index}>{text}</p>)
+        avyReport.map((text, index) => <Text key={index}>{text}</Text>)
       ) : (
-        <p>Loading avalanche report...</p>
+        <Text>Loading avalanche report...</Text>
       )}
-      <h2>Weather</h2>
+      <Heading>Weather</Heading>
       {forecast ? (
-        <img
+        <Image
           src={forecast}
           alt="Rogers Pass Weather Forecast"
           style={{ maxWidth: "90vw" }}
         />
       ) : (
-        <p>Loading forecast...</p>
+        <Text>Loading forecast...</Text>
       )}
     </>
   );
