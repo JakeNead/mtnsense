@@ -9,50 +9,82 @@
 //     });
 //     const page = await browser.newPage();
 //     await page.goto(
-//       "https://mountainconditions.ca/reports/central-kootenay-ski-conditions-0",
+//       "https://mountainconditions.ca/reports/list?field_report_type_tid%5B%5D=5&field_report_type_tid%5B%5D=3&field_report_type_tid%5B%5D=8&field_report_type_tid%5B%5D=1&field_report_type_tid%5B%5D=7&keys=&field_date_value=3#",
 //       {
 //         waitUntil: "networkidle0",
 //       }
 //     );
 
-//     const avyReport = await page.evaluate(() => {
-//       const selectedElements = [];
+//     const reportSelector = "#content-area > div > div.view-content";
+//     const reportContent = [];
 
-//       const title = document
-//         .querySelector(
-//           "#content-area > article > div.header-wrapper > div.columns-2 > div:nth-child(2) > span"
-//         )
-//         .getAttribute("content");
-//       selectedElements.push(title);
+//     for (let i = 0; i < 3; i++) {
+//       await page.waitForSelector(reportSelector);
+//       // page$$ -> if no match, returns empty array
+//       const reports = await page.$$(reportSelector + " > div");
 
-//       const date = document.querySelector(
-//         "#content-area > article > div.header-wrapper > div.submitted > p"
-//       ).textContent;
-//       selectedElements.push(date);
+//       if (reports.length > i) {
+//         await reports[i].click();
+//         await page.waitForNavigation({ waitUntil: "networkidle0" });
 
-//       const content = document.querySelector(
-//         "#content-area > article > div.content > div.field.field-name-body.field-type-text-with-summary.field-label-hidden > div > div"
-//       );
-//       if (!content) return null;
+//         const content = await page.evaluate(() => {
+//           const title = document.querySelector(
+//             "#content-area > article > div.header-wrapper > div.columns-2 > div:nth-child(2) > h2 > a"
+//           ).innerText;
 
-//       const contentText = Array.from(content.children).map((child) =>
-//         child.textContent.trim()
-//       );
-//       selectedElements.push(...contentText);
+//           const date = document.querySelector(
+//             "#content-area > article > div.header-wrapper > div.submitted > p"
+//           ).innerText;
 
-//       return selectedElements;
-//     });
+//           const author = document.querySelector(
+//             "#content-area > article > div.header-wrapper > div.submitted > div.submitted--author > a"
+//           ).innerText;
 
-//     const sanitizedReport = avyReport.map((content) =>
-//       sanitizeHtml(String(content))
-//     );
+//           const body = Array.from(
+//             document.querySelectorAll(
+//               "#content-area > article > div.content > div.field.field-name-body.field-type-text-with-summary.field-label-hidden > div > div > p"
+//             )
+//           ).map((el) => el.innerHTML);
+
+//           return { title, date, author, body };
+//         });
+
+//         // Log the body content in Node.js console
+//         // console.log(content.body);
+
+//         // Check for duplicates
+//         const isDuplicate = reportContent.some(
+//           (report) => report.title === content.title
+//         );
+
+//         if (!isDuplicate) {
+//           reportContent.push(content);
+//         }
+
+//         await page.goBack({ waitUntil: "networkidle0" });
+//       }
+//     }
+
+//     const sanitizedReports = reportContent.map((report) => ({
+//       title: sanitizeHtml(report.title),
+//       date: sanitizeHtml(report.date),
+//       author: sanitizeHtml(report.author),
+//       body: report.body.map((paragraph) =>
+//         sanitizeHtml(paragraph, {
+//           allowedTags: ["p", "br", "a"],
+//           allowedAttributes: {
+//             a: ["href"],
+//           },
+//         })
+//       ),
+//     }));
+//     console.log(sanitizedReports);
+//     res.json(sanitizedReports);
 
 //     await browser.close();
-
-//     res.json({ avyReport: sanitizedReport });
 //   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Failed to fetch avalanche forecast" });
+//     console.error("Error fetching avalanche report:", error);
+//     res.status(500).json({ error: "Failed to fetch avalanche report" });
 //   }
 // });
 
@@ -95,12 +127,20 @@ const rogersPassReport = expressAsyncHandler(async (req, res) => {
           const date = document.querySelector(
             "#content-area > article > div.header-wrapper > div.submitted > p"
           ).innerText;
+
           const author = document.querySelector(
             "#content-area > article > div.header-wrapper > div.submitted > div.submitted--author > a"
           ).innerText;
-          // const body = document.querySelector(".field-name-body").innerHTML;
-          return { title, date, author };
+
+          const body = document.querySelector(
+            "#content-area > article > div.content > div.field.field-name-body.field-type-text-with-summary.field-label-hidden > div > div"
+          ).innerHTML;
+
+          return { title, date, author, body };
         });
+
+        // Log the body content in Node.js console
+        // console.log(content.body);
 
         // Check for duplicates
         const isDuplicate = reportContent.some(
@@ -114,14 +154,25 @@ const rogersPassReport = expressAsyncHandler(async (req, res) => {
         await page.goBack({ waitUntil: "networkidle0" });
       }
     }
-    //
+
+    const sanitizedReports = reportContent.map((report) => ({
+      title: sanitizeHtml(report.title),
+      date: sanitizeHtml(report.date),
+      author: sanitizeHtml(report.author),
+      body: sanitizeHtml(report.body, {
+        allowedTags: ["p", "a"],
+        allowedAttributes: {
+          a: ["href"],
+        },
+      }),
+    }));
+
+    res.json(sanitizedReports);
 
     await browser.close();
-
-    res.json({ avyReport: reportContent });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch avalanche forecast" });
+    console.error("Error fetching avalanche report:", error);
+    res.status(500).json({ error: "Failed to fetch avalanche report" });
   }
 });
 
