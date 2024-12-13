@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import "../App.css";
 import { Text, Heading, Image, Box } from "@chakra-ui/react";
-// import MapComponent from "../MapComponent";
 
 interface AvyReport {
   title: string;
   date: string;
   author: string;
-  body: any;
+  body: string[];
 }
 
 function RogersPass() {
@@ -23,7 +22,7 @@ function RogersPass() {
         );
         if (!response.ok)
           throw new Error(`Something went wrong. Status: ${response.status}`);
-        const data: { avyReport: string[] } = await response.json();
+        const data: AvyReport[] = await response.json();
         setAvyReport(data);
       } catch (err) {
         console.error("Error fetching avalanche report: ", err);
@@ -91,7 +90,7 @@ function RogersPass() {
       <Heading>Avalanche Map</Heading>
       {forecast ? (
         <Image
-          src={avy}
+          src={avy || ""}
           alt="Rogers Pass Weather Forecast"
           style={{ maxWidth: "90vw" }}
         />

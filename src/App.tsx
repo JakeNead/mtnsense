@@ -4,7 +4,7 @@ import RogersPass from "./routes/RogersPass";
 import GrandTeton from "./routes/GrandTeton";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Provider } from "./components/ui/provider";
-import { Box, Center, Container, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 function App() {
   return (

@@ -1,8 +1,6 @@
 import express from "express";
-import puppeteer from "puppeteer";
 import dotenv from "dotenv";
 import cors from "cors";
-import sanitizeHtml from "sanitize-html";
 import router from "./routes/router.js";
 
 dotenv.config();
