@@ -100,8 +100,8 @@ function RogersPass() {
       )}
       <Heading>Report</Heading>
       {avyReport ? (
-        avyReport.map((obj) => (
-          <Box>
+        avyReport.map((obj, index) => (
+          <Box key={index}>
             <Text>{obj.author}</Text>
             <Text>{obj.date}</Text>
             <Text>{obj.title}</Text>

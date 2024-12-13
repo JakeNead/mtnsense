@@ -11,12 +11,13 @@ function App() {
     <>
       <Provider>
         <BrowserRouter>
-          <Box>
+          <Flex minW="100%" minH="100%" justifyContent="center">
             <Flex
               flexDir="column"
               align="center"
-              padding="0rem 1rem"
               gap="1rem"
+              maxW={"1024px"}
+              grow="1"
             >
               <Header />
               <Routes>
@@ -25,7 +26,7 @@ function App() {
                 <Route index path="grandteton" element={<GrandTeton />} />
               </Routes>
             </Flex>
-          </Box>
+          </Flex>
         </BrowserRouter>
       </Provider>
     </>

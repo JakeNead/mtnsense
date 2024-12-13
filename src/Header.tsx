@@ -8,9 +8,10 @@ const Header = function () {
     <Flex
       justify="space-between"
       align="center"
-      margin="1rem"
+      padding="1rem"
       maxW="5xl"
       width="100%"
+      bg={{ base: "gray.200", _dark: "gray.900" }}
     >
       <Menu />
       <Heading textAlign="center" fontSize="2xl">
