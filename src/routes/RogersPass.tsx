@@ -18,7 +18,8 @@ function RogersPass() {
     async function fetchAvyReport() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}rogersPass/report`
+          // `${import.meta.env.VITE_BASE_URL}rogersPass/report`
+          "api/rogerspass/report"
         );
         if (!response.ok)
           throw new Error(`Something went wrong. Status: ${response.status}`);
@@ -35,7 +36,8 @@ function RogersPass() {
     const fetchForecast = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}rogersPass/forecast`
+          // `${import.meta.env.VITE_BASE_URL}rogersPass/forecast`
+          "api/rogerspass/forecast"
         );
         if (!response.ok) {
           throw new Error(`Something went wrong. Status: ${response.status}`);
@@ -60,7 +62,8 @@ function RogersPass() {
     const fetchAvy = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}rogersPass/avy`
+          // `${import.meta.env.VITE_BASE_URL}rogersPass/avy`
+          "api/rogerspass/avy"
         );
         if (!response.ok) {
           throw new Error(`Something went wrong. Status: ${response.status}`);
