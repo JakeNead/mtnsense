@@ -14,13 +14,15 @@ function RogersPass() {
   const [forecast, setForecast] = useState<string | null>(null);
   const [avy, setAvy] = useState<string | null>(null);
 
+  const baseUrl =
+    import.meta.env.VITE_MODE === "production"
+      ? import.meta.env.VITE_PROD_BASE_URL
+      : import.meta.env.VITE_DEV_BASE_URL;
+
   useEffect(() => {
     async function fetchAvyReport() {
       try {
-        const response = await fetch(
-          // `${import.meta.env.VITE_BASE_URL}rogersPass/report`
-          "api/rogerspass/report"
-        );
+        const response = await fetch(`${baseUrl}rogerspass/report`);
         if (!response.ok)
           throw new Error(`Something went wrong. Status: ${response.status}`);
         const data: AvyReport[] = await response.json();
@@ -35,10 +37,7 @@ function RogersPass() {
   useEffect(() => {
     const fetchForecast = async () => {
       try {
-        const response = await fetch(
-          // `${import.meta.env.VITE_BASE_URL}rogersPass/forecast`
-          "api/rogerspass/forecast"
-        );
+        const response = await fetch(`${baseUrl}rogerspass/forecast`);
         if (!response.ok) {
           throw new Error(`Something went wrong. Status: ${response.status}`);
         }
@@ -61,10 +60,7 @@ function RogersPass() {
   useEffect(() => {
     const fetchAvy = async () => {
       try {
-        const response = await fetch(
-          // `${import.meta.env.VITE_BASE_URL}rogersPass/avy`
-          "api/rogerspass/avy"
-        );
+        const response = await fetch(`${baseUrl}rogerspass/avy`);
         if (!response.ok) {
           throw new Error(`Something went wrong. Status: ${response.status}`);
         }
