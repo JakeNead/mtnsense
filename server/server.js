@@ -16,7 +16,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/", router);
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.VITE_MODE !== "production") {
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
   });
