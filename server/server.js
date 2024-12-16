@@ -8,7 +8,10 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: "https://mtnsense-forecasts.netlify.app",
+  origin:
+    process.env.NODE_ENV === "production"
+      ? process.env.PROD_ORIGIN
+      : process.env.DEV_ORIGIN,
   optionsSuccessStatus: 200,
 };
 
