@@ -1,3 +1,6 @@
+[build]
+  functions = "netlify/functions"
+  
 [functions]
   external_node_modules = ["express", "puppeteer", "dotenv", "cors", "sanitize-html"]
   node_bundler = "esbuild"
