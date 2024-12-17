@@ -9,7 +9,7 @@ const port = process.env.PORT || 3001;
 
 const corsOptions = {
   origin:
-    process.env.NODE_ENV === "production"
+    process.env.VITE_MODE === "production"
       ? process.env.PROD_ORIGIN
       : process.env.DEV_ORIGIN,
   optionsSuccessStatus: 200,
