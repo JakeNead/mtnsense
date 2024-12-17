@@ -15,7 +15,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use("/api", router);
+app.use("/api/", router);
 
 if (process.env.VITE_MODE !== "production") {
   app.listen(port, () => {
