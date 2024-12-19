@@ -8,19 +8,21 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://mtnsense-forecasts.netlify.app"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:8888",
+    "https://mtnsense-forecasts.netlify.app",
+  ],
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use("/api/", router);
+app.use("/", router);
 
-if (process.env.VITE_MODE !== "production") {
-  app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-  });
-}
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
 
 export default app;
