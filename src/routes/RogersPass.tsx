@@ -15,8 +15,8 @@ function RogersPass() {
   const [avy, setAvy] = useState<string | null>(null);
 
   const baseUrl =
-    import.meta.env.VITE_MODE === "production"
-      ? import.meta.env.VITE_PROD_BASE_URL
+    process.env.VITE_MODE === "production"
+      ? process.env.VITE_PROD_BASE_URL
       : import.meta.env.VITE_DEV_BASE_URL;
 
   useEffect(() => {
