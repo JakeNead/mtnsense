@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import "../App.css";
-import { Text, Heading, Image, Box } from "@chakra-ui/react";
+import { Text, Heading, Image } from "@chakra-ui/react";
 
-interface AvyReport {
-  title: string;
-  date: string;
-  author: string;
-  body: string[];
-}
+// interface AvyReport {
+//   title: string;
+//   date: string;
+//   author: string;
+//   body: string[];
+// }
 
 function RogersPass() {
   // const [avyReport, setAvyReport] = useState<AvyReport[] | null>(null);
