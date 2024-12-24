@@ -37,9 +37,13 @@ function RogersPass() {
   useEffect(() => {
     async function test() {
       const response = await fetch(`${baseUrl}/rogers-pass-forecast`);
+      if (!response.ok) {
+        throw new Error(
+          `Something went wrong with a fetch: ${response.status}`
+        );
+      }
       const data = await response.json();
       setForecast(data.description);
-      console.log(forecast);
     }
     test();
   }, []);
