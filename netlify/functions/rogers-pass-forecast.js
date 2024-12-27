@@ -6,7 +6,9 @@ chromium.setHeadlessMode = true;
 
 export async function handler(event, context) {
   let browser = null;
+  console.log("Handler invoked");
   try {
+    console.log("Launching browser");
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
     browser = await puppeteer.launch({
@@ -16,7 +18,7 @@ export async function handler(event, context) {
         process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
       headless: chromium.headless,
     });
-
+    console.log("Opening new page");
     const page = await browser.newPage();
     // await page.goto(
     //   "https://spotwx.com/products/grib_index.php?model=gem_reg_10km&lat=51.19742&lon=-117.72125&tz=America/Vancouver&display=graph",
@@ -36,6 +38,7 @@ export async function handler(event, context) {
       (element) => element.content
     );
     await browser.close();
+    console.log("browser closed");
     return {
       statusCode: 200,
       headers: {

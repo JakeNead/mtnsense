@@ -43,6 +43,8 @@ function RogersPass() {
         );
       }
       const data = await response.json();
+      console.log("data: ", data);
+      console.log("description: ", data.description);
       setForecast(data.description);
     }
     test();
