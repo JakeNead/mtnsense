@@ -19,7 +19,7 @@ function RogersPass() {
       ? "http://localhost:8888/api"
       : process.env.VITE_PROD_BASE_URL;
 
-  console.log(process.env.VITE_MODE);
+  console.log(process.env.VITE_PROD_BASE_URL);
 
   // useEffect(() => {
   //   async function fetchAvyReport() {
