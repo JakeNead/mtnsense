@@ -8,7 +8,15 @@ export async function handler(event, context) {
   let browser = null;
   console.log("Handler invoked");
   try {
-    console.log("Launching browser");
+    console.log(
+      "process.env.CHROME_EXECUTABLE_PATH",
+      process.env.CHROME_EXECUTABLE_PATH
+    );
+    console.log(
+      "import.meta.env.CHROME_EXECUTABLE_PATH",
+      import.meta.env.CHROME_EXECUTABLE_PATH
+    );
+
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
     browser = await puppeteer.launch({
