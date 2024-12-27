@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium-min";
+import chromium from "@sparticuz/chromium";
 
 chromium.setGraphicsMode = false;
 chromium.setHeadlessMode = true;
@@ -9,7 +9,7 @@ export async function handler(event, context) {
   console.log("Handler invoked");
   try {
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
-
+    console.log("isLocal: ", isLocal);
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
