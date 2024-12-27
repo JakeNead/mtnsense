@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium";
+import chromium from "@sparticuz/chromium-min";
 
 chromium.setGraphicsMode = false;
 chromium.setHeadlessMode = true;
@@ -10,14 +10,7 @@ export async function handler(event, context) {
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
     browser = await puppeteer.launch({
-      args: isLocal
-        ? puppeteer.defaultArgs()
-        : [
-            ...chromium.args,
-            "--hide-scrollbars",
-            "--incognito",
-            "--no-sandbox",
-          ],
+      args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath:
         process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
