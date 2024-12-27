@@ -17,7 +17,7 @@ function RogersPass() {
   const baseUrl =
     import.meta.env.VITE_MODE === "developement"
       ? "http://localhost:8888/api"
-      : "/api/";
+      : "/api";
 
   console.log("baseUrl: ", baseUrl);
   console.log("import.meta.env.VITE_MODE: ", import.meta.env.VITE_MODE);
