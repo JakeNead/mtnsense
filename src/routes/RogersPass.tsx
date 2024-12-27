@@ -17,10 +17,16 @@ function RogersPass() {
   const baseUrl =
     import.meta.env.VITE_MODE === "developement"
       ? "http://localhost:8888/api"
-      : process.env.PROD_BASE_PATH;
+      : "/api/";
 
   console.log("baseUrl: ", baseUrl);
-
+  console.log("import.meta.env.VITE_MODE: ", import.meta.env.VITE_MODE);
+  console.log("process.env.VITE_MODE: ", process.env.VITE_MODE);
+  console.log(
+    "import.meta.env.PROD_BASE_PATH: ",
+    import.meta.env.PROD_BASE_PATH
+  );
+  console.log("process.env.PROD_BASE_PATH: ", process.env.PROD_BASE_PATH);
   // useEffect(() => {
   //   async function fetchAvyReport() {
   //     try {
@@ -44,9 +50,10 @@ function RogersPass() {
           `Something went wrong with a fetch: ${response.status}`
         );
       }
-      const data = await response.json();
-
-      setForecast(data.description);
+      console.log("fetch response: ", response);
+      const { description } = await response.json();
+      console.log("fetch parsed data: ", description);
+      setForecast(description);
     }
     test();
   }, []);
