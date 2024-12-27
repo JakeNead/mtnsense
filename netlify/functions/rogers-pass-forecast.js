@@ -8,22 +8,16 @@ export async function handler(event, context) {
   let browser = null;
   console.log("Handler invoked");
   try {
-    console.log(
-      "process.env.CHROME_EXECUTABLE_PATH",
-      process.env.CHROME_EXECUTABLE_PATH
-    );
-    console.log(
-      "import.meta.env.CHROME_EXECUTABLE_PATH",
-      import.meta.env.CHROME_EXECUTABLE_PATH
-    );
-
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
+
+    console.log("isLocal: ", isLocal);
 
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath:
-        process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
+        import.meta.env.CHROME_EXECUTABLE_PATH ||
+        (await chromium.executablePath()),
       headless: chromium.headless,
     });
     console.log("Opening new page");
