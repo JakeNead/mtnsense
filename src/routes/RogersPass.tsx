@@ -17,7 +17,7 @@ function RogersPass() {
   const baseUrl =
     import.meta.env.VITE_MODE === "developement"
       ? "http://localhost:8888/api"
-      : process.env.VITE_PROD_BASE_URL;
+      : process.env.PROD_BASE_PATH;
 
   console.log("baseUrl: ", baseUrl);
 
