@@ -15,9 +15,11 @@ function RogersPass() {
   // const [avy, setAvy] = useState<string | null>(null);
 
   const baseUrl =
-    import.meta.env.VITE_MODE === "production"
-      ? import.meta.env.VITE_PROD_BASE_URL
-      : "http://localhost:8888/api";
+    import.meta.env.VITE_MODE === "developement"
+      ? "http://localhost:8888/api"
+      : process.env.VITE_PROD_BASE_URL;
+
+  console.log(process.env.VITE_MODE);
 
   // useEffect(() => {
   //   async function fetchAvyReport() {
@@ -43,8 +45,7 @@ function RogersPass() {
         );
       }
       const data = await response.json();
-      console.log("data: ", data);
-      console.log("description: ", data.description);
+
       setForecast(data.description);
     }
     test();
