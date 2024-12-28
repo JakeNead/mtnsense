@@ -2,7 +2,7 @@
   functions = "netlify/functions"
   
 [functions]
-  external_node_modules = ["express", "puppeteer", "dotenv", "cors", "sanitize-html"]
+  external_node_modules = ["express", "puppeteer", "dotenv", "cors", "sanitize-html", "@sparticuz/chromium"]
   node_bundler = "esbuild"
 
 [[redirects]]
