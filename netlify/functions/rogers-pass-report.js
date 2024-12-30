@@ -90,6 +90,10 @@ export async function handler(event, context) {
     };
   } catch (error) {
     console.error("Error fetching avalanche report:", error);
-    res.status(500).json({ error: "Failed to fetch avalanche report" });
+    return {
+      statusCode: 500,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ error: "Failed to fetch avalanche report" }),
+    };
   }
 }
