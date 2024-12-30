@@ -1,15 +1,16 @@
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
+const s3 = new S3Client();
 
 chromium.setGraphicsMode = false;
 chromium.setHeadlessMode = true;
 
 export async function handler(event, context) {
   let browser = null;
-  console.log("Handler invoked");
   try {
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
-    console.log("isLocal: ", isLocal);
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
@@ -17,35 +18,45 @@ export async function handler(event, context) {
         process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
       headless: chromium.headless,
     });
-    console.log("Opening new page");
+
     const page = await browser.newPage();
-    // await page.goto(
-    //   "https://spotwx.com/products/grib_index.php?model=gem_reg_10km&lat=51.19742&lon=-117.72125&tz=America/Vancouver&display=graph",
-    //   {
-    //     waitUntil: "networkidle0",
-    //   }
-    // );
-
-    // const screenshotBuffer = await page.screenshot({
-    //   fullPage: true,
-    // });
-
-    await page.goto("https://www.wikipedia.com");
-
-    const description = await page.$eval(
-      'meta[name="description"]',
-      (element) => element.content
+    await page.goto(
+      "https://spotwx.com/products/grib_index.php?model=gem_reg_10km&lat=51.19742&lon=-117.72125&tz=America/Vancouver&display=graph",
+      {
+        waitUntil: "networkidle0",
+      }
     );
+
+    const screenshotBuffer = await page.screenshot({
+      fullPage: true,
+    });
+
+    const bucketName =
+      process.env.S3_BUCKET_NAME || import.meta.env.S3_BUCKET_NAME;
+    const key = `rogers-pass-forecast/latest.png`;
+
+    const uploadParams = {
+      Bucket: bucketName,
+      Key: key,
+      Body: screenshotBuffer,
+      ContentType: "image/png",
+    };
+
+    await s3.send(new PutObjectCommand(uploadParams));
+
     await browser.close();
     console.log("browser closed");
+
     return {
       statusCode: 200,
       headers: {
-        // "Content-Type": "image/png",
-        // "Content-Length": screenshotBuffer.length,
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({ description }),
+      body: JSON.stringify({
+        message: "Rogers Pass forecast screenshot successfully updated",
+        imageUrl: `https://${bucketName}.s3.amazonaws.com/${key}`,
+      }),
     };
   } catch (error) {
     console.error("Error taking forecast screenshot:", error);
@@ -62,53 +73,6 @@ export async function handler(event, context) {
   }
 }
 
-////////////////////////////////////////////////
-
-// import puppeteer from "puppeteer";
-
-// export async function handler(event, context) {
-//   let browser = null;
-//   try {
-//     browser = await puppeteer.launch({
-//       args: ["--no-sandbox", "--disable-setuid-sandbox"],
-//     });
-
-//     const page = await browser.newPage();
-//     await page.goto(
-//       "https://spotwx.com/products/grib_index.php?model=gem_reg_10km&lat=51.19742&lon=-117.72125&tz=America/Vancouver&display=graph",
-//       {
-//         waitUntil: "networkidle0",
-//       }
-//     );
-
-//     const screenshotBuffer = await page.screenshot({
-//       fullPage: true,
-//     });
-
-//     await browser.close();
-
-//     //option 1
-//     // return {
-//     //   statusCode: 200,
-//     //   headers: {
-//     //     "Content-Type": "image/png",
-//     //     "Content-Length": screenshotBuffer.length.toString(),
-//     //   },
-//     //   body: screenshotBuffer.toString("base64"),
-//     //   isBase64Encoded: true,
-//     // };
-//   } catch (error) {
-//     console.error("Error taking forecast screenshot:", error);
-//     return {
-//       statusCode: 500,
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ error: "Failed to fetch weather forecast" }),
-//     };
-//   } finally {
-//     if (browser) {
-//       await browser.close();
-//     }
-//   }
-// }
+export const config = {
+  schedule: "0 */2 * * *",
+};

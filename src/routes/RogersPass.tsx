@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import "../App.css";
-import { Text, Heading, Image } from "@chakra-ui/react";
+import { Text, Heading, Image, Box } from "@chakra-ui/react";
 
-// interface AvyReport {
-//   title: string;
-//   date: string;
-//   author: string;
-//   body: string[];
-// }
+interface AvyReport {
+  title: string;
+  date: string;
+  author: string;
+  body: string[];
+}
 
 function RogersPass() {
-  // const [avyReport, setAvyReport] = useState<AvyReport[] | null>(null);
+  const [avyReport, setAvyReport] = useState<AvyReport[] | null>(null);
   const [forecast, setForecast] = useState<string | null>(null);
   // const [avy, setAvy] = useState<string | null>(null);
 
@@ -19,28 +19,24 @@ function RogersPass() {
       ? "http://localhost:8888/api"
       : "/api";
 
-  console.log("baseUrl: ", baseUrl);
-  console.log("import.meta.env.VITE_MODE: ", import.meta.env.VITE_MODE);
-  console.log("process.env.VITE_MODE: ", process.env.VITE_MODE);
-  console.log(
-    "import.meta.env.PROD_BASE_PATH: ",
-    import.meta.env.PROD_BASE_PATH
-  );
-  console.log("process.env.PROD_BASE_PATH: ", process.env.PROD_BASE_PATH);
-  // useEffect(() => {
-  //   async function fetchAvyReport() {
-  //     try {
-  //       const response = await fetch(`${baseUrl}/rogers-pass-report`);
-  //       if (!response.ok)
-  //         throw new Error(`Something went wrong. Status: ${response.status}`);
-  //       const data: AvyReport[] = await response.json();
-  //       setAvyReport(data);
-  //     } catch (err) {
-  //       console.error("Error fetching avalanche report: ", err);
-  //     }
-  //   }
-  //   fetchAvyReport();
-  // }, []);
+  const forecastUrl = `https://${
+    process.env.S3_BUCKET_NAME || import.meta.env.S3_BUCKET_NAME
+  }.s3.amazonaws.com/rogers-pass-forecast/latest.png`;
+
+  useEffect(() => {
+    async function fetchAvyReport() {
+      try {
+        const response = await fetch(`${baseUrl}/rogers-pass-report`);
+        if (!response.ok)
+          throw new Error(`Something went wrong. Status: ${response.status}`);
+        const data: AvyReport[] = await response.json();
+        setAvyReport(data);
+      } catch (err) {
+        console.error("Error fetching avalanche report: ", err);
+      }
+    }
+    fetchAvyReport();
+  }, []);
 
   useEffect(() => {
     async function test() {
@@ -50,9 +46,7 @@ function RogersPass() {
           `Something went wrong with a fetch: ${response.status}`
         );
       }
-      console.log("fetch response: ", response);
       const { description } = await response.json();
-      console.log("fetch parsed data: ", description);
       setForecast(description);
     }
     test();
@@ -130,8 +124,8 @@ function RogersPass() {
       ) : (
         <Text>Loading avalanche info...</Text>
       )} */}
-      {/* <Heading>Report</Heading> */}
-      {/* {avyReport ? (
+      <Heading>Report</Heading>
+      {avyReport ? (
         avyReport.map((obj, index) => (
           <Box key={index}>
             <Text>{obj.author}</Text>
@@ -142,17 +136,13 @@ function RogersPass() {
         ))
       ) : (
         <Text>Loading avalanche report...</Text>
-      )} */}
+      )}
       <Heading>Weather</Heading>
-      {/* {forecast ? (
-        <Image
-          src={forecast}
-          alt="Rogers Pass Weather Forecast"
-          style={{ maxWidth: "90vw" }}
-        />
-      ) : (
-        <Text>Loading forecast...</Text>
-      )} */}
+      <Image
+        src={forecastUrl}
+        alt="Rogers Pass Weather Forecast"
+        style={{ maxWidth: "90vw" }}
+      />
       <Text>{forecast}</Text>
     </>
   );
