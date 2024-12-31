@@ -11,17 +11,13 @@ interface AvyReport {
 
 function RogersPass() {
   const [avyReport, setAvyReport] = useState<AvyReport[] | null>(null);
-  const [forecast, setForecast] = useState<string | null>(null);
   // const [avy, setAvy] = useState<string | null>(null);
 
-  const baseUrl =
-    import.meta.env.VITE_MODE === "developement"
-      ? "http://localhost:8888/api"
-      : "/api";
+  const isDevMode = import.meta.env.VITE_MODE === "developement";
 
-  const forecastUrl = `https://${
-    process.env.S3_BUCKET_NAME || import.meta.env.S3_BUCKET_NAME
-  }.s3.amazonaws.com/rogers-pass-forecast/latest.png`;
+  const baseUrl = isDevMode ? "http://localhost:8888/api" : "/api";
+
+  const forecastUrl = `https://mtnsense.s3.amazonaws.com/rogers-pass-forecast/latest.png`;
 
   useEffect(() => {
     async function fetchAvyReport() {
@@ -38,20 +34,7 @@ function RogersPass() {
     fetchAvyReport();
   }, []);
 
-  useEffect(() => {
-    async function test() {
-      const response = await fetch(`${baseUrl}/rogers-pass-forecast`);
-      if (!response.ok) {
-        throw new Error(
-          `Something went wrong with a fetch: ${response.status}`
-        );
-      }
-      const { description } = await response.json();
-      setForecast(description);
-    }
-    test();
-  }, []);
-
+  // this is a trigger to test my schedule function
   // useEffect(() => {
   //   const fetchForecast = async () => {
   //     try {
@@ -59,7 +42,22 @@ function RogersPass() {
   //       if (!response.ok) {
   //         throw new Error(`Something went wrong. Status: ${response.status}`);
   //       }
-  //       // option 1
+  //       const message = await response.json();
+  //       console.log(message.imageUrl);
+  //     } catch (error) {
+  //       console.error("Error fetching forecast:", error);
+  //     }
+  //   };
+  //   fetchForecast();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchAvy = async () => {
+  //     try {
+  //       const response = await fetch(`${baseUrl}/rogers-pass-avy`);
+  //       if (!response.ok) {
+  //         throw new Error(`Something went wrong. Status: ${response.status}`);
+  //       }
   //       const arrayBuffer = await response.arrayBuffer();
   //       const base64 = btoa(
   //         new Uint8Array(arrayBuffer).reduce(
@@ -67,24 +65,13 @@ function RogersPass() {
   //           ""
   //         )
   //       );
-  //       // console.log(`data:image/png;base64,${base64}`);
-  //       setForecast(`data:image/png;base64,${base64}`);
-
-  //       // option 2
-  //       // const base64Image = await response.text();
-  //       // console.log(base64Image);
-
-  //       // setForecast(`data:image/png;base64,${base64Image}`);
-
-  //       // option 3
-  //       // const { status } = await response.json();
-  //       // setForecast(status);
+  //       setAvy(`data:image/png;base64,${base64}`);
   //     } catch (error) {
   //       console.error("Error fetching forecast:", error);
   //     }
   //   };
 
-  //   fetchForecast();
+  //   fetchAvy();
   // }, []);
 
   // useEffect(() => {
@@ -139,11 +126,12 @@ function RogersPass() {
       )}
       <Heading>Weather</Heading>
       <Image
-        src={forecastUrl}
+        src={
+          "https://mtnsense.s3.amazonaws.com/rogers-pass-forecast/latest.png"
+        }
         alt="Rogers Pass Weather Forecast"
         style={{ maxWidth: "90vw" }}
       />
-      <Text>{forecast}</Text>
     </>
   );
 }
