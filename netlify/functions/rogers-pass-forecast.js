@@ -2,13 +2,20 @@ import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const s3 = new S3Client();
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.MY_AWS_ACCESS_KEY,
+    secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 chromium.setGraphicsMode = false;
 chromium.setHeadlessMode = true;
 
 export async function handler(event, context) {
   let browser = null;
+
   try {
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
     browser = await puppeteer.launch({
@@ -20,6 +27,9 @@ export async function handler(event, context) {
     });
 
     const page = await browser.newPage();
+
+    await page.setViewport({ width: 850, height: 1200 });
+
     await page.goto(
       "https://spotwx.com/products/grib_index.php?model=gem_reg_10km&lat=51.19742&lon=-117.72125&tz=America/Vancouver&display=graph",
       {
@@ -27,16 +37,16 @@ export async function handler(event, context) {
       }
     );
 
+    await page.waitForSelector("#container_temperature");
+
     const screenshotBuffer = await page.screenshot({
       fullPage: true,
     });
 
-    const bucketName =
-      process.env.S3_BUCKET_NAME || import.meta.env.S3_BUCKET_NAME;
     const key = `rogers-pass-forecast/latest.png`;
 
     const uploadParams = {
-      Bucket: bucketName,
+      Bucket: process.env.S3_BUCKET_NAME,
       Key: key,
       Body: screenshotBuffer,
       ContentType: "image/png",
@@ -73,6 +83,7 @@ export async function handler(event, context) {
   }
 }
 
+// converts from serverless function to scheduled function
 export const config = {
   schedule: "0 */2 * * *",
 };
