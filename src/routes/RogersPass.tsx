@@ -17,8 +17,6 @@ function RogersPass() {
 
   const baseUrl = isDevMode ? "http://localhost:8888/api" : "/api";
 
-  const forecastUrl = `https://mtnsense.s3.amazonaws.com/rogers-pass-forecast/latest.png`;
-
   useEffect(() => {
     async function fetchAvyReport() {
       try {
