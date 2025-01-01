@@ -2,18 +2,18 @@ import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const s3 = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.MY_AWS_ACCESS_KEY,
-    secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
-  },
-});
+export default async () => {
+  const s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.MY_AWS_ACCESS_KEY,
+      secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+    },
+  });
 
-chromium.setGraphicsMode = false;
-chromium.setHeadlessMode = true;
+  chromium.setGraphicsMode = false;
+  chromium.setHeadlessMode = true;
 
-export async function handler(event, context) {
   let browser = null;
 
   try {
@@ -81,7 +81,7 @@ export async function handler(event, context) {
       body: JSON.stringify({ error: "Internal server error" }),
     };
   }
-}
+};
 
 // converts from serverless function to scheduled function
 export const config = {
