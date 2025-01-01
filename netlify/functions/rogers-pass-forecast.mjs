@@ -3,6 +3,7 @@ import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 export default async () => {
+  console.log("Rogers Pass Forecast scheduled function started");
   const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
@@ -57,29 +58,19 @@ export default async () => {
     await browser.close();
     console.log("browser closed");
 
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        message: "Rogers Pass forecast screenshot successfully updated",
-        imageUrl: `https://${bucketName}.s3.amazonaws.com/${key}`,
-      }),
-    };
+    return new Response(
+      "scheduled rogers pass forecast function executed successfully",
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error taking forecast screenshot:", error);
     if (browser) {
       await browser.close();
     }
-    return {
-      statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ error: "Internal server error" }),
-    };
+    return new Response(
+      "scheduled rogers pass forecast function failed: " + error.message,
+      { status: 500 }
+    );
   }
 };
 
