@@ -1,10 +1,9 @@
 import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import Response from "node-fetch";
+import { Response } from "node-fetch";
 
 export default async () => {
-  console.log("Rogers Pass Forecast scheduled function started");
   const s3 = new S3Client({
     region: process.env.MY_AWS_REGION,
     credentials: {
@@ -59,10 +58,9 @@ export default async () => {
     await browser.close();
     console.log("browser closed");
 
-    return new Response(
-      "scheduled rogers pass forecast function executed successfully",
-      { status: 200 }
-    );
+    return new Response("Scheduled Rogers Pass forecast screenshot updated", {
+      status: 200,
+    });
   } catch (error) {
     console.error("Error taking forecast screenshot:", error);
     if (browser) {
