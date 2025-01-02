@@ -22,7 +22,7 @@ export default async () => {
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       // defaultViewport: chromium.defaultViewport,
-      defaultViewport: { width: 1920, height: 3900 },
+      defaultViewport: { width: 1920, height: 3300 },
       executablePath:
         process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
       headless: chromium.headless,
@@ -51,7 +51,7 @@ export default async () => {
 
     await browser.close();
 
-    return Response("Scheduled Rogers Pass avy screenshot updated", {
+    return new Response("Scheduled Rogers Pass avy screenshot updated", {
       statusCode: 200,
     });
   } catch (error) {
