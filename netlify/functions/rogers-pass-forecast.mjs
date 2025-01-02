@@ -5,7 +5,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 export default async () => {
   console.log("Rogers Pass Forecast scheduled function started");
   const s3 = new S3Client({
-    region: process.env.AWS_REGION,
+    region: process.env.MY_AWS_REGION,
     credentials: {
       accessKeyId: process.env.MY_AWS_ACCESS_KEY,
       secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
