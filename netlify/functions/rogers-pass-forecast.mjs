@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import Response from "node-fetch";
 
 export default async () => {
   console.log("Rogers Pass Forecast scheduled function started");
