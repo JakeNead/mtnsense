@@ -29,63 +29,18 @@ function RogersPass() {
   }, []);
 
   // this is a trigger to test serverless functions before refactoring to schedule functions
-  useEffect(() => {
-    const fetchAvy = async () => {
-      try {
-        const response = await fetch(`api/rogers-pass-avy`);
-        if (!response.ok) {
-          throw new Error(`Something went wrong. Status: ${response.status}`);
-        }
-      } catch (error) {
-        console.error("Error fetching forecast:", error);
-      }
-    };
-    fetchAvy();
-  }, []);
-
   // useEffect(() => {
   //   const fetchAvy = async () => {
   //     try {
-  //       const response = await fetch(`${baseUrl}/rogers-pass-avy`);
+  //       const response = await fetch(`api/rogers-pass-avy`);
   //       if (!response.ok) {
   //         throw new Error(`Something went wrong. Status: ${response.status}`);
   //       }
-  //       const arrayBuffer = await response.arrayBuffer();
-  //       const base64 = btoa(
-  //         new Uint8Array(arrayBuffer).reduce(
-  //           (data, byte) => data + String.fromCharCode(byte),
-  //           ""
-  //         )
-  //       );
-  //       setAvy(`data:image/png;base64,${base64}`);
+  //       console.log("avy image fetched");
   //     } catch (error) {
   //       console.error("Error fetching forecast:", error);
   //     }
   //   };
-
-  //   fetchAvy();
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchAvy = async () => {
-  //     try {
-  //       const response = await fetch(`${baseUrl}/rogers-pass-avy`);
-  //       if (!response.ok) {
-  //         throw new Error(`Something went wrong. Status: ${response.status}`);
-  //       }
-  //       const arrayBuffer = await response.arrayBuffer();
-  //       const base64 = btoa(
-  //         new Uint8Array(arrayBuffer).reduce(
-  //           (data, byte) => data + String.fromCharCode(byte),
-  //           ""
-  //         )
-  //       );
-  //       setAvy(`data:image/png;base64,${base64}`);
-  //     } catch (error) {
-  //       console.error("Error fetching forecast:", error);
-  //     }
-  //   };
-
   //   fetchAvy();
   // }, []);
 
