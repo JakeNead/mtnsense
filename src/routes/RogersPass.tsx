@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "../App.css";
-import { Text, Heading, Image, Box } from "@chakra-ui/react";
+import { Text, Heading, Image, Box, Flex } from "@chakra-ui/react";
+import { useColorModeValue } from "../components/ui/color-mode";
 
 interface AvyReport {
   title: string;
@@ -11,16 +12,11 @@ interface AvyReport {
 
 function RogersPass() {
   const [avyReport, setAvyReport] = useState<AvyReport[] | null>(null);
-  // const [avy, setAvy] = useState<string | null>(null);
-
-  const isDevMode = import.meta.env.VITE_MODE === "developement";
-
-  const baseUrl = isDevMode ? "http://localhost:8888/api" : "/api";
 
   useEffect(() => {
     async function fetchAvyReport() {
       try {
-        const response = await fetch(`${baseUrl}/rogers-pass-report`);
+        const response = await fetch(`api/rogers-pass-report`);
         if (!response.ok)
           throw new Error(`Something went wrong. Status: ${response.status}`);
         const data: AvyReport[] = await response.json();
@@ -32,22 +28,20 @@ function RogersPass() {
     fetchAvyReport();
   }, []);
 
-  // this is a trigger to test my schedule function
-  // useEffect(() => {
-  //   const fetchForecast = async () => {
-  //     try {
-  //       const response = await fetch(`${baseUrl}/rogers-pass-forecast`);
-  //       if (!response.ok) {
-  //         throw new Error(`Something went wrong. Status: ${response.status}`);
-  //       }
-  //       const message = await response.json();
-  //       console.log(message.imageUrl);
-  //     } catch (error) {
-  //       console.error("Error fetching forecast:", error);
-  //     }
-  //   };
-  //   fetchForecast();
-  // }, []);
+  // this is a trigger to test serverless functions before refactoring to schedule functions
+  useEffect(() => {
+    const fetchAvy = async () => {
+      try {
+        const response = await fetch(`api/rogers-pass-avy`);
+        if (!response.ok) {
+          throw new Error(`Something went wrong. Status: ${response.status}`);
+        }
+      } catch (error) {
+        console.error("Error fetching forecast:", error);
+      }
+    };
+    fetchAvy();
+  }, []);
 
   // useEffect(() => {
   //   const fetchAvy = async () => {
@@ -94,42 +88,45 @@ function RogersPass() {
 
   //   fetchAvy();
   // }, []);
+
+  const invertColors = useColorModeValue("none", "invert(1)");
 
   return (
     <>
       <Heading>Rogers Pass, BC</Heading>
       <Heading>Webcam</Heading>
-      <Image src="https://cache.drivebc.ca/bchighwaycam/pub/cameras/101.jpg"></Image>
-      {/* {avy ? (
+      <Flex direction="column" padding=".5rem" alignItems="center" gap="1rem">
+        <Image src="https://cache.drivebc.ca/bchighwaycam/pub/cameras/101.jpg"></Image>
         <Image
-          src={avy || ""}
-          alt="Rogers Pass Weather Forecast"
-          style={{ maxWidth: "90vw" }}
+          src={"https://mtnsense.s3.amazonaws.com/rogers-pass-avy/latest.png"}
+          alt="Rogers Pass Avalanche Forecast"
+          filter={invertColors}
         />
-      ) : (
-        <Text>Loading avalanche info...</Text>
-      )} */}
-      <Heading>Report</Heading>
-      {avyReport ? (
-        avyReport.map((obj, index) => (
-          <Box key={index}>
-            <Text>{obj.author}</Text>
-            <Text>{obj.date}</Text>
-            <Text>{obj.title}</Text>
-            <Box dangerouslySetInnerHTML={{ __html: obj.body }} />
-          </Box>
-        ))
-      ) : (
-        <Text>Loading avalanche report...</Text>
-      )}
-      <Heading>Weather</Heading>
-      <Image
-        src={
-          "https://mtnsense.s3.amazonaws.com/rogers-pass-forecast/latest.png"
-        }
-        alt="Rogers Pass Weather Forecast"
-        style={{ maxWidth: "90vw" }}
-      />
+
+        <Heading>Weather</Heading>
+        <Image
+          src={
+            "https://mtnsense.s3.amazonaws.com/rogers-pass-forecast/latest.png"
+          }
+          alt="Rogers Pass Weather Forecast"
+          filter={invertColors}
+        />
+        <Heading>Reports</Heading>
+        {avyReport ? (
+          avyReport.map((obj, index) => (
+            <Box key={index} maxW="95vw" p=".5rem" m="1rem 0">
+              <Text fontWeight="bold" mb="0.5rem">
+                {obj.title}
+              </Text>
+              <Text mb="0.5rem">{obj.date}</Text>
+              <Text mb="1rem">{obj.author}</Text>
+              <Box dangerouslySetInnerHTML={{ __html: obj.body }} />
+            </Box>
+          ))
+        ) : (
+          <Text>Loading avalanche report...</Text>
+        )}
+      </Flex>
     </>
   );
 }
