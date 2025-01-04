@@ -1,11 +1,23 @@
 import puppeteer from "puppeteer";
 import sanitizeHtml from "sanitize-html";
 import chromium from "@sparticuz/chromium";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { Response } from "node-fetch";
 
-chromium.setGraphicsMode = false;
-chromium.setHeadlessMode = true;
+export default async () => {
+  chromium.setGraphicsMode = false;
+  chromium.setHeadlessMode = true;
 
-export async function handler(event, context) {
+  let browser = null;
+
+  const s3 = new S3Client({
+    region: process.env.MY_AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.MY_AWS_ACCESS_KEY,
+      secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+    },
+  });
+
   try {
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
@@ -81,19 +93,41 @@ export async function handler(event, context) {
       }),
     }));
 
+    const key = `rogers-pass-report/latest.json`;
+
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: key,
+      Body: JSON.stringify(sanitizedReports),
+      ContentType: "application/json",
+    };
+
+    await s3.send(new PutObjectCommand(params));
+
     await browser.close();
 
-    return {
-      statusCode: 200,
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(sanitizedReports),
-    };
+    if (isLocal) return;
+    return new Response(
+      JSON.stringify({ message: "Rogers Pass report successfully updated" }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
-    console.error("Error fetching avalanche report:", error);
-    return {
-      statusCode: 500,
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ error: "Failed to fetch avalanche report" }),
-    };
+    console.error("Error updating avalanche report:", error);
+    if (isLocal) return;
+    return new Response(JSON.stringify("Rogers Pass report update failed"), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
-}
+};
+
+export const config = {
+  schedule: "0 */2 * * *",
+};
