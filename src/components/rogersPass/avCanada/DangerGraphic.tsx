@@ -5,15 +5,15 @@ import {
   High,
   Extreme,
   NoRating,
-} from "./DangerIcons";
-import { Report } from "../interfaces/AvyReport";
+} from "../../DangerIcons";
+import { Report } from "../../../interfaces/AvyReport";
 import { Text } from "@chakra-ui/react";
 
-interface AvyProps {
+interface AvCanProps {
   data: Report | null;
 }
 
-function getDangerComponent(level: string) {
+function getDangerSvg(level: string) {
   switch (level) {
     case "low":
       return <Low />;
@@ -38,7 +38,7 @@ function capitalize(str: string) {
   return lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
 }
 
-export default function RogerPassAvy({ data }: AvyProps) {
+export default function RogerPassDangerGraphic({ data }: AvCanProps) {
   if (!data) {
     return <Text>Avalanche report loading...</Text>;
   }
@@ -180,7 +180,7 @@ export default function RogerPassAvy({ data }: AvyProps) {
             </title>
             {capitalize(data.dangerRatings[0].ratings.alp.rating.value)}
           </text>
-          {getDangerComponent(data.dangerRatings[0].ratings.alp.rating.value)}
+          {getDangerSvg(data.dangerRatings[0].ratings.alp.rating.value)}
         </g>
         <text x="291" y="293" font-size="8" tab-index="0">
           Treeline
@@ -208,7 +208,7 @@ export default function RogerPassAvy({ data }: AvyProps) {
             </title>
             {capitalize(data.dangerRatings[0].ratings.tln.rating.value)}
           </text>
-          {getDangerComponent(data.dangerRatings[0].ratings.tln.rating.value)}
+          {getDangerSvg(data.dangerRatings[0].ratings.tln.rating.value)}
         </g>
         <text x="269" y="320" font-size="8" tab-index="0">
           Below Treeline
@@ -236,7 +236,7 @@ export default function RogerPassAvy({ data }: AvyProps) {
             </title>
             {capitalize(data.dangerRatings[0].ratings.btl.rating.value)}
           </text>
-          {getDangerComponent(data.dangerRatings[0].ratings.btl.rating.value)}
+          {getDangerSvg(data.dangerRatings[0].ratings.btl.rating.value)}
         </g>
       </svg>
     </>
