@@ -7,10 +7,10 @@ import {
   NoRating,
 } from "../../DangerIcons";
 import { Report } from "../../../interfaces/AvyReport";
-import { Text } from "@chakra-ui/react";
+import { Heading, Text, Box } from "@chakra-ui/react";
 
 interface AvCanProps {
-  data: Report | null;
+  report: Report | null;
 }
 
 function getDangerSvg(level: string) {
@@ -38,13 +38,16 @@ function capitalize(str: string) {
   return lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
 }
 
-export default function RogerPassDangerGraphic({ data }: AvCanProps) {
-  if (!data) {
+export default function DangerGraphic({ report }: AvCanProps) {
+  if (!report) {
     return <Text>Avalanche report loading...</Text>;
   }
 
   return (
-    <>
+    <Box marginBottom="2px">
+      <Heading background="blackAlpha.900" color="white" padding=".3rem .6rem">
+        {report.dangerRatings[0].date.display}
+      </Heading>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="255 205 450 146"
@@ -91,34 +94,34 @@ export default function RogerPassDangerGraphic({ data }: AvCanProps) {
           d="M289.4 276.5L275.5 298c-1 .1-2.2.1-3.4.1l15.3-23.2.3.3c.5.3 1.1.8 1.7 1.3z"
         ></path>
         <linearGradient id="a" x1="143.62" x2="176.32" y1="109.89" y2="109.89">
-          <stop offset="0" stop-color="#789226"></stop>
-          <stop offset="1" stop-color="#C1D831"></stop>
+          <stop offset="0" stopColor="#789226"></stop>
+          <stop offset="1" stopColor="#C1D831"></stop>
         </linearGradient>
         <path
           fill="url(#a)"
           d="M338.2 316.3c-5.8-.8-11-3.4-15.5-5.9-6-3.3-8.3-4.7-20.8-9.7-12.5-4.9-22.6-3.1-23-3.1-.2 0-1.6.2-3.4.3l13.9-21.5c14 10.2 38.3-1.3 38.3-1.5 0-.1 1.4-.5 3.7-1.1l6.8 42.5z"
         ></path>
         <linearGradient id="b" x1="186.53" x2="197.34" y1="86.37" y2="92.61">
-          <stop offset="0" stop-color="#8ECEF3"></stop>
-          <stop offset=".05" stop-color="#A4D8F5"></stop>
-          <stop offset=".13" stop-color="#C0E4F8"></stop>
-          <stop offset=".22" stop-color="#D7EEFB"></stop>
-          <stop offset=".33" stop-color="#E9F6FD"></stop>
-          <stop offset=".45" stop-color="#F6FBFE"></stop>
-          <stop offset=".62" stop-color="#FDFEFF"></stop>
-          <stop offset="1" stop-color="#FFF"></stop>
+          <stop offset="0" stopColor="#8ECEF3"></stop>
+          <stop offset=".05" stopColor="#A4D8F5"></stop>
+          <stop offset=".13" stopColor="#C0E4F8"></stop>
+          <stop offset=".22" stopColor="#D7EEFB"></stop>
+          <stop offset=".33" stopColor="#E9F6FD"></stop>
+          <stop offset=".45" stopColor="#F6FBFE"></stop>
+          <stop offset=".62" stopColor="#FDFEFF"></stop>
+          <stop offset="1" stopColor="#FFF"></stop>
         </linearGradient>
         <path
           fill="url(#b)"
           d="M372.8 271.9c-5.5-.3-11.3-1-14.8-1.6l-6.3-9.8 17.3-24.4 3.8 35.8z"
         ></path>
         <linearGradient id="c" x1="186.66" x2="195.78" y1="104.01" y2="104.01">
-          <stop offset="0" stop-color="#789226"></stop>
-          <stop offset=".14" stop-color="#90A92A"></stop>
-          <stop offset=".3" stop-color="#A6BE2D"></stop>
-          <stop offset=".49" stop-color="#B5CD2F"></stop>
-          <stop offset=".7" stop-color="#BED531"></stop>
-          <stop offset="1" stop-color="#C1D831"></stop>
+          <stop offset="0" stopColor="#789226"></stop>
+          <stop offset=".14" stopColor="#90A92A"></stop>
+          <stop offset=".3" stopColor="#A6BE2D"></stop>
+          <stop offset=".49" stopColor="#B5CD2F"></stop>
+          <stop offset=".7" stopColor="#BED531"></stop>
+          <stop offset="1" stopColor="#C1D831"></stop>
         </linearGradient>
         <path
           fill="url(#c)"
@@ -129,14 +132,14 @@ export default function RogerPassDangerGraphic({ data }: AvCanProps) {
           d="M386.7 270.5c-3.1 1.4-8.5 1.6-13.9 1.4l-3.9-35.7 17.8 34.3z"
         ></path>
         <linearGradient id="d" x1="159" x2="174.85" y1="86.16" y2="95.31">
-          <stop offset="0" stop-color="#8ECEF3"></stop>
-          <stop offset=".05" stop-color="#A4D8F5"></stop>
-          <stop offset=".13" stop-color="#C0E4F8"></stop>
-          <stop offset=".22" stop-color="#D7EEFB"></stop>
-          <stop offset=".33" stop-color="#E9F6FD"></stop>
-          <stop offset=".45" stop-color="#F6FBFE"></stop>
-          <stop offset=".62" stop-color="#FDFEFF"></stop>
-          <stop offset="1" stop-color="#FFF"></stop>
+          <stop offset="0" stopColor="#8ECEF3"></stop>
+          <stop offset=".05" stopColor="#A4D8F5"></stop>
+          <stop offset=".13" stopColor="#C0E4F8"></stop>
+          <stop offset=".22" stopColor="#D7EEFB"></stop>
+          <stop offset=".33" stopColor="#E9F6FD"></stop>
+          <stop offset=".45" stopColor="#F6FBFE"></stop>
+          <stop offset=".62" stopColor="#FDFEFF"></stop>
+          <stop offset="1" stopColor="#FFF"></stop>
         </linearGradient>
         <path
           fill="url(#d)"
@@ -147,14 +150,14 @@ export default function RogerPassDangerGraphic({ data }: AvCanProps) {
           d="M359.9 275.1c-6.5-4.3-22.1-2.8-28.4-1.3l-8-49.9 32.7 45.9c-1-.2 0 0 0 0l3.7 5.3z"
         ></path>
         <linearGradient id="e" x1="135.77" x2="179.2" y1="125.04" y2="125.04">
-          <stop offset="0" stop-color="#507F4F"></stop>
-          <stop offset="1" stop-color="#6EA469"></stop>
+          <stop offset="0" stopColor="#507F4F"></stop>
+          <stop offset="1" stopColor="#6EA469"></stop>
         </linearGradient>
         <path
           fill="url(#e)"
           d="M343.7 351l-46.1-25.5-37.3-4.4 15.1-23.2c1.8-.1 3.2-.3 3.4-.3.5 0 10.6-1.8 23 3.1s14.8 6.3 20.8 9.7c4.5 2.5 9.7 5.1 15.5 5.9l5.6 34.7z"
         ></path>
-        <text x="302" y="265" font-size="8" tab-index="0">
+        <text x="302" y="265" fontSize="8" tab-index="0">
           Alpine
         </text>
         <g transform="translate(385 211)">
@@ -164,25 +167,25 @@ export default function RogerPassDangerGraphic({ data }: AvCanProps) {
             height="37"
             fill="#FFF200"
             stroke="#231F20"
-            stroke-width="0.5"
-            stroke-miterlimit="10"
+            strokeWidth="0.5"
+            strokeMiterlimit="10"
           ></rect>
           <text
             x="70"
             y="23"
             fill="#231F20"
             tab-index="0"
-            font-size="18.5"
-            font-weight="bold"
+            fontSize="18.5"
+            fontWeight="bold"
           >
             <title>
-              {capitalize(data.dangerRatings[0].ratings.alp.rating.value)}
+              {capitalize(report.dangerRatings[0].ratings.alp.rating.value)}
             </title>
-            {capitalize(data.dangerRatings[0].ratings.alp.rating.value)}
+            {capitalize(report.dangerRatings[0].ratings.alp.rating.value)}
           </text>
-          {getDangerSvg(data.dangerRatings[0].ratings.alp.rating.value)}
+          {getDangerSvg(report.dangerRatings[0].ratings.alp.rating.value)}
         </g>
-        <text x="291" y="293" font-size="8" tab-index="0">
+        <text x="291" y="293" fontSize="8" tab-index="0">
           Treeline
         </text>
         <g transform="translate(405 261)">
@@ -192,25 +195,25 @@ export default function RogerPassDangerGraphic({ data }: AvCanProps) {
             height="37"
             fill="#50B848"
             stroke="#231F20"
-            stroke-width="0.5"
-            stroke-miterlimit="10"
+            strokeWidth="0.5"
+            strokeMiterlimit="10"
           ></rect>
           <text
             x="70"
             y="23"
             fill="#231F20"
             tab-index="0"
-            font-size="18.5"
-            font-weight="bold"
+            fontSize="18.5"
+            fontWeight="bold"
           >
             <title>
-              {capitalize(data.dangerRatings[0].ratings.tln.rating.value)}
+              {capitalize(report.dangerRatings[0].ratings.tln.rating.value)}
             </title>
-            {capitalize(data.dangerRatings[0].ratings.tln.rating.value)}
+            {capitalize(report.dangerRatings[0].ratings.tln.rating.value)}
           </text>
-          {getDangerSvg(data.dangerRatings[0].ratings.tln.rating.value)}
+          {getDangerSvg(report.dangerRatings[0].ratings.tln.rating.value)}
         </g>
-        <text x="269" y="320" font-size="8" tab-index="0">
+        <text x="269" y="320" fontSize="8" tab-index="0">
           Below Treeline
         </text>
         <g transform="translate(425 311)">
@@ -220,25 +223,25 @@ export default function RogerPassDangerGraphic({ data }: AvCanProps) {
             height="37"
             fill="#50B848"
             stroke="#231F20"
-            stroke-width="0.5"
-            stroke-miterlimit="10"
+            strokeWidth="0.5"
+            strokeMiterlimit="10"
           ></rect>
           <text
             x="70"
             y="23"
             fill="#231F20"
             tab-index="0"
-            font-size="18.5"
-            font-weight="bold"
+            fontSize="18.5"
+            fontWeight="bold"
           >
             <title>
-              {capitalize(data.dangerRatings[0].ratings.btl.rating.value)}
+              {capitalize(report.dangerRatings[0].ratings.btl.rating.value)}
             </title>
-            {capitalize(data.dangerRatings[0].ratings.btl.rating.value)}
+            {capitalize(report.dangerRatings[0].ratings.btl.rating.value)}
           </text>
-          {getDangerSvg(data.dangerRatings[0].ratings.btl.rating.value)}
+          {getDangerSvg(report.dangerRatings[0].ratings.btl.rating.value)}
         </g>
       </svg>
-    </>
+    </Box>
   );
 }
