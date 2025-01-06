@@ -6,7 +6,6 @@ import Advice from "./Advice";
 import Summary from "./Summary";
 import { Report } from "../../../interfaces/AvyReport";
 import { Box, Text, Heading } from "@chakra-ui/react";
-import { useColorModeValue } from "../../ui/color-mode";
 
 interface AvCanProps {
   report: Report | null;

@@ -1,4 +1,3 @@
-import { Report } from "../../../interfaces/AvyReport";
 import { Box } from "@chakra-ui/react";
 
 interface HeadlineProps {
