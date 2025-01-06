@@ -1,5 +1,4 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { useColorModeValue } from "../../ui/color-mode";
 import { DangerRating } from "../../../interfaces/AvyReport";
 
 interface DangerForecastProps {
@@ -36,7 +35,6 @@ export default function DangerForecast({ dangerRatings }: DangerForecastProps) {
   const alp = "rgb(222, 238, 250)";
   const tln = "rgb(209, 216, 166)";
   const btl = "rgb(175, 191, 173)";
-  const textColor = useColorModeValue("black", "white");
   return (
     <Flex flexDir="column" color="black" gap="2px">
       {dangerRatings
