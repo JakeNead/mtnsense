@@ -57,10 +57,6 @@ interface Problem {
   data: ProblemData;
 }
 
-interface terrainAndTravelAdvice {
-  advice: string[];
-}
-
 interface Report {
   id: string;
   forecaster: string;
@@ -93,5 +89,4 @@ export type {
   ProblemFactor,
   ProblemData,
   Problem,
-  terrainAndTravelAdvice,
 };
