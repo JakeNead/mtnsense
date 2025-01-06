@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "../App.css";
 import { Text, Heading, Image, Box, Flex } from "@chakra-ui/react";
 import { useColorModeValue } from "../components/ui/color-mode";
-import Avy from "../components/rogersPass/avCanada/RogersPassAvy";
+import AvCan from "../components/rogersPass/avCanada/RogersPassAvy";
 import { AvyData, Report } from "../interfaces/AvyReport";
 
 interface AvyReport {
@@ -58,7 +58,7 @@ function RogersPass() {
       <Heading>Webcam</Heading>
       <Flex direction="column" padding=".5rem" alignItems="center" gap="1rem">
         <Image src="https://cache.drivebc.ca/bchighwaycam/pub/cameras/101.jpg"></Image>
-        <Avy data={avyData} />
+        <AvCan report={avyData} />
         <Image
           src={"https://mtnsense.s3.amazonaws.com/rogers-pass-avy/latest.png"}
           alt="Rogers Pass Avalanche Forecast"
