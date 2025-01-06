@@ -1,13 +1,17 @@
 import { Report } from "../../../interfaces/AvyReport";
 import { Box } from "@chakra-ui/react";
 
-export default function Headline({ highlights }: Report) {
+interface HeadlineProps {
+  highlights: string;
+}
+
+export default function Headline({ highlights }: HeadlineProps) {
   return (
     <>
       <Box
         dangerouslySetInnerHTML={{ __html: highlights }}
-        m="3rem 0rem"
-        fontSize="xl"
+        m="2rem 0rem"
+        fontSize="large"
         css={{
           "& p": {
             marginBottom: "1rem",
