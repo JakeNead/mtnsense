@@ -59,11 +59,6 @@ function RogersPass() {
       <Flex direction="column" padding=".5rem" alignItems="center" gap="1rem">
         <Image src="https://cache.drivebc.ca/bchighwaycam/pub/cameras/101.jpg"></Image>
         <AvCan report={avyData} />
-        <Image
-          src={"https://mtnsense.s3.amazonaws.com/rogers-pass-avy/latest.png"}
-          alt="Rogers Pass Avalanche Forecast"
-          filter={invertColors}
-        />
         <Heading>Weather</Heading>
         <Image
           src={
@@ -81,7 +76,18 @@ function RogersPass() {
               </Text>
               <Text mb="0.5rem">{obj.date}</Text>
               <Text mb="1rem">{obj.author}</Text>
-              <Box dangerouslySetInnerHTML={{ __html: obj.body }} />
+              <Box
+                maxW="850px"
+                dangerouslySetInnerHTML={{ __html: obj.body }}
+                css={{
+                  "& p": {
+                    marginBottom: ".8rem",
+                  },
+                  "& div": {
+                    background: "blue",
+                  },
+                }}
+              />
             </Box>
           ))
         ) : (
