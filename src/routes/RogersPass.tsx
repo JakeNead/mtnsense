@@ -56,7 +56,7 @@ function RogersPass() {
     <>
       <Heading>Rogers Pass, BC</Heading>
       <Heading>Webcam</Heading>
-      <Flex direction="column" padding=".5rem" alignItems="center" gap="1rem">
+      <Flex direction="column" alignItems="center" gap="1rem">
         <Image src="https://cache.drivebc.ca/bchighwaycam/pub/cameras/101.jpg"></Image>
         <AvCan report={avyData} />
         <Heading>Weather</Heading>
@@ -82,9 +82,6 @@ function RogersPass() {
                 css={{
                   "& p": {
                     marginBottom: ".8rem",
-                  },
-                  "& div": {
-                    background: "blue",
                   },
                 }}
               />
