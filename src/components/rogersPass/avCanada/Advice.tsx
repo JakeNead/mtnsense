@@ -7,8 +7,10 @@ interface AdviceProps {
 export default function Advice({ advice }: AdviceProps) {
   return (
     <Box>
-      {advice.map((text: string) => (
-        <Text marginBottom="1rem"> - {text}</Text>
+      {advice.map((text: string, index: number) => (
+        <Text key={index} marginBottom="1rem">
+          - {text}
+        </Text>
       ))}
     </Box>
   );
