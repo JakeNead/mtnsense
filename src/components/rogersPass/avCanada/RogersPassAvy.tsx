@@ -6,6 +6,7 @@ import Advice from "./Advice";
 import Summary from "./Summary";
 import { Report } from "../../../interfaces/AvyReport";
 import { Box, Text, Heading } from "@chakra-ui/react";
+import { useColorModeValue } from "../../ui/color-mode";
 
 interface AvCanProps {
   report: Report | null;
@@ -39,10 +40,15 @@ export default function AvCan({ report }: AvCanProps) {
     dangerRatings,
     highlights,
     terrainAndTravelAdvice,
+    summaries,
+    confidence,
   } = report;
 
   return (
-    <Box maxW="600px">
+    <Box maxW="600px" bg={{ base: "gray.100", _dark: "gray.900" }} p="1rem">
+      <Heading textAlign="center" m=".8rem">
+        Avalanche Canada
+      </Heading>
       <MetaData
         report={{
           dateIssued: formatDate(dateIssued),
@@ -52,9 +58,11 @@ export default function AvCan({ report }: AvCanProps) {
       <Headline highlights={highlights} />
       <DangerGraphic report={report} />
       <DangerForecast dangerRatings={dangerRatings} />
-      <Heading>Terrain and Travel Advice</Heading>
+      <Heading textAlign="center" m=".8rem">
+        Terrain and Travel Advice
+      </Heading>
       <Advice advice={terrainAndTravelAdvice} />
-      <Summary />
+      <Summary summaries={summaries} confidence={confidence} />
     </Box>
   );
 }
