@@ -5,7 +5,7 @@ import DangerForecast from "./DangerForecast";
 import Advice from "./Advice";
 import Summary from "./Summary";
 import { Report } from "../../../interfaces/AvyReport";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Heading } from "@chakra-ui/react";
 
 interface AvCanProps {
   report: Report | null;
@@ -14,7 +14,6 @@ interface AvCanProps {
 function formatDate(isoString: string) {
   const date = new Date(isoString);
   const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: "short",
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -34,20 +33,27 @@ export default function AvCan({ report }: AvCanProps) {
     return <Text>Loading...</Text>;
   }
 
-  const { dateIssued, validUntil, dangerRatings } = report;
+  const {
+    dateIssued,
+    validUntil,
+    dangerRatings,
+    highlights,
+    terrainAndTravelAdvice,
+  } = report;
 
   return (
-    <Box>
+    <Box maxW="600px">
       <MetaData
         report={{
           dateIssued: formatDate(dateIssued),
           validUntil: formatDate(validUntil),
         }}
       />
-      <Headline />
+      <Headline highlights={highlights} />
       <DangerGraphic report={report} />
       <DangerForecast dangerRatings={dangerRatings} />
-      <Advice />
+      <Heading>Terrain and Travel Advice</Heading>
+      <Advice advice={terrainAndTravelAdvice} />
       <Summary />
     </Box>
   );
