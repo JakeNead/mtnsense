@@ -7,13 +7,13 @@ interface MetaDataProps {
 
 export default function MetaData({ report }: { report: MetaDataProps }) {
   return (
-    <Flex>
-      <Box>
-        <Text>Date Issued</Text>
+    <Flex justifyContent="start">
+      <Box flex="1">
+        <Text fontWeight="bold">Date Issued</Text>
         <Text>{report.dateIssued}</Text>
       </Box>
-      <Box>
-        <Text>Valid Until</Text>
+      <Box flex="1">
+        <Text fontWeight="bold">Valid Until</Text>
         <Text>{report.validUntil}</Text>
       </Box>
     </Flex>
