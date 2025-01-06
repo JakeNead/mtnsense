@@ -42,8 +42,8 @@ export default function DangerForecast({ dangerRatings }: DangerForecastProps) {
         .map((rating, index) => (
           <Box key={index}>
             <Heading
-              color="white"
-              background="blackAlpha.900"
+              color={{ base: "gray.900", _dark: "gray.100" }}
+              bg={{ base: "gray.100", _dark: "gray.900" }}
               padding=".3rem .6rem"
             >
               {rating.date.display}{" "}

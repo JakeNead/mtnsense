@@ -45,7 +45,11 @@ export default function DangerGraphic({ report }: AvCanProps) {
 
   return (
     <Box marginBottom="2px">
-      <Heading background="blackAlpha.900" color="white" padding=".3rem .6rem">
+      <Heading
+        bg={{ base: "gray.100", _dark: "gray.900" }}
+        color={{ base: "gray.900", _dark: "gray.100" }}
+        padding=".3rem .6rem"
+      >
         {report.dangerRatings[0].date.display}
       </Heading>
       <svg
