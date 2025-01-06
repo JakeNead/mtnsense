@@ -78,7 +78,11 @@ function RogersPass() {
               <Text mb="1rem">{obj.author}</Text>
               <Box
                 maxW="850px"
-                dangerouslySetInnerHTML={{ __html: obj.body }}
+                dangerouslySetInnerHTML={{
+                  __html: Array.isArray(obj.body)
+                    ? obj.body.join("")
+                    : obj.body,
+                }}
                 css={{
                   "& p": {
                     marginBottom: ".8rem",
