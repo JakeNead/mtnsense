@@ -5,7 +5,7 @@ import {
   High,
   Extreme,
   NoRating,
-} from "../../DangerIcons";
+} from "./DangerIcons";
 import { Report } from "../../../interfaces/AvyReport";
 import { Heading, Text, Box } from "@chakra-ui/react";
 
