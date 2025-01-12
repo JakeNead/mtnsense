@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import "../App.css";
 import { Text, Heading, Image, Box, Flex } from "@chakra-ui/react";
-import { useColorModeValue } from "../components/ui/color-mode";
+// import { useColorModeValue } from "../components/ui/color-mode";
 import AvCan from "../components/rogersPass/avCanada/RogersPassAvy";
 import { AvyData, Report } from "../interfaces/AvyReport";
+import RogersPassForecasts from "../components/rogersPass/Forecasts";
 
 interface AvyReport {
   title: string;
@@ -50,23 +51,20 @@ function RogersPass() {
     fetchAvy();
   }, []);
 
-  const invertColors = useColorModeValue("none", "invert(1)");
-
+  const borderRadius = "5px";
   return (
     <>
       <Heading>Rogers Pass, BC</Heading>
       <Heading>Webcam</Heading>
       <Flex direction="column" alignItems="center" gap="1rem">
-        <Image src="https://cache.drivebc.ca/bchighwaycam/pub/cameras/101.jpg"></Image>
+        <Image
+          src="https://cache.drivebc.ca/bchighwaycam/pub/cameras/101.jpg"
+          borderRadius={borderRadius}
+        ></Image>
         <AvCan report={avyData} />
         <Heading>Weather</Heading>
-        <Image
-          src={
-            "https://mtnsense.s3.amazonaws.com/rogers-pass-forecast/latest.png"
-          }
-          alt="Rogers Pass Weather Forecast"
-          filter={invertColors}
-        />
+        <RogersPassForecasts />
+
         <Heading>Reports</Heading>
         {reports ? (
           reports.map((obj, index) => (
