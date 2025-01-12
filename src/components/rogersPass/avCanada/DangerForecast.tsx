@@ -5,6 +5,8 @@ interface DangerForecastProps {
   dangerRatings: DangerRating[];
 }
 
+const borderRadius = "5px";
+
 function capitalize(str: string) {
   if (!str) return str;
   const lowerCase = str.toLowerCase();
@@ -48,7 +50,12 @@ export default function DangerForecast({ dangerRatings }: DangerForecastProps) {
             >
               {rating.date.display}{" "}
             </Heading>
-            <Flex flexDir="row" gap="2px">
+            <Flex
+              flexDir="row"
+              gap="2px"
+              borderRadius={borderRadius}
+              overflow="hidden"
+            >
               <Flex flexDir="column" flex="1" gap="2px">
                 <Text p={padding} background={alp}>
                   {rating.ratings.alp.display}

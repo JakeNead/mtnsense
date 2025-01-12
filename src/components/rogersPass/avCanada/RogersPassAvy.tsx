@@ -11,6 +11,8 @@ interface AvCanProps {
   report: Report | null;
 }
 
+const borderRadius = "5px";
+
 function formatDate(isoString: string) {
   const date = new Date(isoString);
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -44,7 +46,12 @@ export default function AvCan({ report }: AvCanProps) {
   } = report;
 
   return (
-    <Box maxW="600px" bg={{ base: "gray.100", _dark: "gray.900" }} p="1rem">
+    <Box
+      maxW="600px"
+      bg={{ base: "gray.100", _dark: "gray.900" }}
+      p="1rem"
+      borderRadius={borderRadius}
+    >
       <Heading textAlign="center" m=".8rem">
         Avalanche Canada
       </Heading>

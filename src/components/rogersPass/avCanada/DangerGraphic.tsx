@@ -12,6 +12,7 @@ import { Heading, Text, Box } from "@chakra-ui/react";
 interface AvCanProps {
   report: Report | null;
 }
+const borderRadius = "5px";
 
 function getDangerSvg(level: string) {
   switch (level) {
@@ -55,7 +56,12 @@ export default function DangerGraphic({ report }: AvCanProps) {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="255 205 450 146"
-        style={{ overflow: "visible", width: "100%", position: "relative" }}
+        style={{
+          overflow: "hidden",
+          borderRadius: borderRadius,
+          width: "100%",
+          position: "relative",
+        }}
       >
         <path
           fill="#DDEEFA"
