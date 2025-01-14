@@ -1,5 +1,4 @@
 import puppeteer from "puppeteer";
-import sanitizeHtml from "sanitize-html";
 import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Response } from "node-fetch";
@@ -14,7 +13,6 @@ export default async () => {
   chromium.setGraphicsMode = false;
   chromium.setHeadlessMode = true;
 
-  const baseUrl = "https://avalanche.ca";
   let browser = null;
 
   const s3 = new S3Client({
@@ -26,7 +24,12 @@ export default async () => {
   });
 
   try {
-    const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
+    // const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
+    const isLocal =
+      typeof process !== "undefined" &&
+      process.versions != null &&
+      process.versions.node != null &&
+      !!process.env.CHROME_EXECUTABLE_PATH;
 
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
@@ -37,6 +40,7 @@ export default async () => {
     });
 
     const page = await browser.newPage();
+    const baseUrl = "https://avalanche.ca";
     await page.goto(`${baseUrl}/mountain-information-network/submissions`, {
       waitUntil: "networkidle0",
     });
@@ -53,7 +57,7 @@ export default async () => {
         ) {
           const anchor = cells[0].querySelector("a");
           if (anchor) {
-            links.push(`${baseUrl}${anchor.href}`);
+            links.push(baseUrl + anchor.getAttribute("href"));
           }
         }
       });
