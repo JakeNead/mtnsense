@@ -1,13 +1,7 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Response } from "node-fetch";
-
-// MIN
-// click regions -> selkirks
-// click report[i]
-// scrape
-// back
 
 export default async () => {
   chromium.setGraphicsMode = false;
@@ -23,7 +17,6 @@ export default async () => {
     },
   });
 
-  // const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
   const isLocal =
     typeof process !== "undefined" &&
     process.versions != null &&
@@ -57,12 +50,15 @@ export default async () => {
         ) {
           const anchor = cells[0].querySelector("a");
           if (anchor) {
-            links.push(baseUrl + anchor.getAttribute("href"));
+            const href = anchor.getAttribute("href");
+            if (href && href.startsWith("/")) {
+              links.push(baseUrl + href);
+            }
           }
         }
       });
       return links.slice(0, 3); // Keep only the first three links
-    });
+    }, baseUrl);
 
     const reportContent = [];
 
@@ -118,9 +114,12 @@ export default async () => {
     );
   } catch (error) {
     console.error("Error updating avalanche MIN reports:", error);
+    if (browser) {
+      await browser.close();
+    }
     if (isLocal) return;
     return new Response(
-      JSON.stringify("Rogers Pass MINreports update failed"),
+      JSON.stringify("Rogers Pass MIN reports update failed"),
       {
         status: 500,
         headers: {
