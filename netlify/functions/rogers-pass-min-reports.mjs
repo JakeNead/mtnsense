@@ -14,6 +14,7 @@ export default async () => {
   chromium.setGraphicsMode = false;
   chromium.setHeadlessMode = true;
 
+  const baseUrl = "https://avalanche.ca";
   let browser = null;
 
   const s3 = new S3Client({
@@ -36,23 +37,28 @@ export default async () => {
     });
 
     const page = await browser.newPage();
-    await page.goto(
-      "https://avalanche.ca/mountain-information-network/submissions",
-      {
-        waitUntil: "networkidle0",
-      }
-    );
-
-    // Wait for the page to load and display the reports
-    await page.waitForSelector('td:contains("Selkirks")');
+    await page.goto(`${baseUrl}/mountain-information-network/submissions`, {
+      waitUntil: "networkidle0",
+    });
 
     // Find the Selkirk reports and get the first three links
-    const selkirkLinks = await page.$$eval(
-      'td:contains("Selkirks") + td a',
-      (anchors) => {
-        return anchors.slice(0, 3).map((anchor) => anchor.href);
-      }
-    );
+    const selkirkLinks = await page.evaluate(() => {
+      const links = [];
+      const rows = Array.from(document.querySelectorAll("tr"));
+      rows.forEach((row) => {
+        const cells = row.querySelectorAll("td");
+        if (
+          cells.length > 0 &&
+          cells[cells.length - 2].textContent.trim() === "Selkirks"
+        ) {
+          const anchor = cells[0].querySelector("a");
+          if (anchor) {
+            links.push(`${baseUrl}${anchor.href}`);
+          }
+        }
+      });
+      return links.slice(0, 3); // Keep only the first three links
+    });
 
     const reportContent = [];
 
