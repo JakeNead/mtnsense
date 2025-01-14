@@ -70,21 +70,34 @@ export default async () => {
       console.log("Visiting selkirks link");
 
       const content = await page.evaluate(() => {
-        const getTextContent = (dtText) => {
-          const dtElement = Array.from(document.querySelectorAll("dt")).find(
-            (dt) => dt.textContent.trim() === dtText
+        const getTextContent = (text) => {
+          const element = Array.from(document.querySelectorAll("dt, h4")).find(
+            (el) => el.textContent.trim() === text
           );
-          if (!dtElement) return null;
-          const ddElement = dtElement.nextElementSibling;
-          if (!ddElement) return null;
-          const liElements = ddElement.querySelectorAll("li");
-          return Array.from(liElements).map((li) => li.textContent.trim());
+          if (!element) return null;
+
+          // Get the next sibling element
+          const nextElement = element.nextElementSibling;
+          if (!nextElement) return null;
+          console.log("nextElement: ", nextElement);
+
+          // Check if the next sibling is a <dd> with <li> children or a <div> with <p> children
+          if (nextElement.tagName === "dd") {
+            const liElements = nextElement.querySelectorAll("li");
+            return Array.from(liElements).map((li) => li.textContent.trim());
+          } else if (nextElement.tagName === "div") {
+            const pElements = nextElement.querySelectorAll("p");
+            return Array.from(pElements).map((p) => p.textContent.trim());
+          }
+
+          return null;
         };
 
         const comments = getTextContent("COMMENTS");
-        const avalancheConditions = getTextContent("Avalanche conditions");
+        // const avalancheConditions = getTextContent("Avalanche conditions");
+        console.log(comments);
 
-        return { comments, avalancheConditions };
+        return { comments };
       });
 
       reportContent.push(content);
