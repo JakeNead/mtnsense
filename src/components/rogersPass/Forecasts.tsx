@@ -5,11 +5,23 @@ const borderRadius = "5px";
 
 export default function RogersPassForecasts() {
   return (
-    <Flex flexDir="column" alignItems="center" gap="1rem" width="100%">
+    <Flex
+      flexDir="column"
+      alignItems="center"
+      gap="1rem"
+      width="100%"
+      maxWidth="650px"
+    >
       <Flex flexDir="column" alignItems="center" width="100%">
-        <Heading>Five Fingers 1250m</Heading>
-        <Link href="https://www.windy.com/multimodel/50.935/-118.253?canRdwpsWaves,waves,50.929,-118.253,14">
-          View Detailed Forecast <LuExternalLink />
+        <Heading alignSelf="start" paddingLeft=".5rem">
+          Five Fingers 1250m
+        </Heading>
+        <Link
+          alignSelf="start"
+          paddingLeft=".5rem"
+          href="https://www.windy.com/multimodel/50.935/-118.253?canRdwpsWaves,waves,50.929,-118.253,14"
+        >
+          View Details <LuExternalLink />
         </Link>
         <Box
           width="100%"
@@ -27,9 +39,15 @@ export default function RogersPassForecasts() {
         </Box>
       </Flex>
       <Flex flexDir="column" alignItems="center" width="100%">
-        <Heading>"Pearly Rock" 2300m</Heading>
-        <Link href="https://www.windy.com/multimodel/51.244/-117.443?canRdwpsWaves,waves,51.238,-117.443,14">
-          View Detailed Forecast <LuExternalLink />
+        <Heading alignSelf="start" paddingLeft=".5rem">
+          Pearly Rock 2300m
+        </Heading>
+        <Link
+          alignSelf="start"
+          paddingLeft=".5rem"
+          href="https://www.windy.com/multimodel/51.244/-117.443?canRdwpsWaves,waves,51.238,-117.443,14"
+        >
+          View Details <LuExternalLink />
         </Link>
         <Box
           width="100%"
@@ -47,9 +65,15 @@ export default function RogersPassForecasts() {
         </Box>
       </Flex>
       <Flex flexDir="column" alignItems="center" width="100%">
-        <Heading>Sir Donald Summit 3070m</Heading>
-        <Link href="https://www.windy.com/multimodel/51.264/-117.433?canRdwpsWaves,waves,51.261,-117.433,15">
-          View Detailed Forecast <LuExternalLink />
+        <Heading alignSelf="start" paddingLeft=".5rem">
+          Sir Donald Summit 3070m
+        </Heading>
+        <Link
+          alignSelf="start"
+          paddingLeft=".5rem"
+          href="https://www.windy.com/multimodel/51.264/-117.433?canRdwpsWaves,waves,51.261,-117.433,15"
+        >
+          View Details <LuExternalLink />
         </Link>
         <Box
           width="100%"
