@@ -23,14 +23,14 @@ export default async () => {
     },
   });
 
-  try {
-    // const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
-    const isLocal =
-      typeof process !== "undefined" &&
-      process.versions != null &&
-      process.versions.node != null &&
-      !!process.env.CHROME_EXECUTABLE_PATH;
+  // const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
+  const isLocal =
+    typeof process !== "undefined" &&
+    process.versions != null &&
+    process.versions.node != null &&
+    !!process.env.CHROME_EXECUTABLE_PATH;
 
+  try {
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
@@ -46,7 +46,7 @@ export default async () => {
     });
 
     // Find the Selkirk reports and get the first three links
-    const selkirkLinks = await page.evaluate(() => {
+    const selkirkLinks = await page.evaluate((baseUrl) => {
       const links = [];
       const rows = Array.from(document.querySelectorAll("tr"));
       rows.forEach((row) => {
@@ -134,3 +134,4 @@ export default async () => {
 export const config = {
   schedule: "*/5 * * * *",
 };
+U;
