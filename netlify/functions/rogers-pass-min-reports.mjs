@@ -41,14 +41,12 @@ export default async () => {
     const selkirkLinks = await page.evaluate(() => {
       const links = [];
       const rows = Array.from(document.querySelectorAll("tr"));
-      console.log(rows);
       rows.forEach((row) => {
         const cells = row.querySelectorAll("td");
         if (
           cells.length > 0 &&
           cells[cells.length - 2].textContent.trim() === "Selkirks"
         ) {
-          console.log("found a selkirk element");
           const anchor = cells[0].querySelector("a");
           if (anchor) {
             const href = anchor.getAttribute("href");
@@ -66,42 +64,48 @@ export default async () => {
     const reportContent = [];
 
     for (const link of selkirkLinks) {
-      await page.goto(link, { waitUntil: "networkidle0" });
-      console.log("Visiting selkirks link");
+      try {
+        const newPage = await browser.newPage();
+        await newPage.goto(link, { waitUntil: "networkidle0" });
+        console.log("Visiting selkirks link", link);
 
-      const content = await page.evaluate(() => {
-        const getTextContent = (text) => {
-          const element = Array.from(document.querySelectorAll("dt, h4")).find(
-            (el) => el.textContent.trim() === text
-          );
-          if (!element) return null;
+        const content = await newPage.evaluate(() => {
+          const getTextContent = (text) => {
+            const element = Array.from(
+              document.querySelectorAll("dt, h4")
+            ).find((el) => el.textContent.trim() === text);
+            if (!element) return null;
 
-          // Get the next sibling element
-          const nextElement = element.nextElementSibling;
-          if (!nextElement) return null;
-          console.log("nextElement: ", nextElement);
+            // Get the next sibling element
+            const nextElement = element.nextElementSibling;
+            if (!nextElement) return null;
+            console.log("nextElement: ", nextElement);
 
-          // Check if the next sibling is a <dd> with <li> children or a <div> with <p> children
-          if (nextElement.tagName === "dd") {
-            const liElements = nextElement.querySelectorAll("li");
-            return Array.from(liElements).map((li) => li.textContent.trim());
-          } else if (nextElement.tagName === "div") {
-            const pElements = nextElement.querySelectorAll("p");
-            return Array.from(pElements).map((p) => p.textContent.trim());
-          }
+            // Check if the next sibling is a <dd> with <li> children or a <div> with <p> children
+            if (nextElement.tagName === "dd") {
+              const liElements = nextElement.querySelectorAll("li");
+              return Array.from(liElements).map((li) => li.textContent.trim());
+            } else if (nextElement.tagName === "div") {
+              const pElements = nextElement.querySelectorAll("p");
+              return Array.from(pElements).map((p) => p.textContent.trim());
+            }
 
-          return null;
-        };
+            return null;
+          };
 
-        const comments = getTextContent("COMMENTS");
-        // const avalancheConditions = getTextContent("Avalanche conditions");
-        console.log(comments);
+          const comments = getTextContent("COMMENTS");
+          // const avalancheConditions = getTextContent("Avalanche conditions");
+          console.log(comments);
 
-        return { comments };
-      });
+          return { comments };
+        });
 
-      reportContent.push(content);
-      await page.goBack({ waitUntil: "networkidle0" });
+        reportContent.push(content);
+        // await page.goBack({ waitUntil: "networkidle0" });
+        await newPage.close();
+      } catch (err) {
+        console.error("Error navigating to link: ", link, err);
+      }
     }
 
     const key = `rogers-pass-min-report/latest.json`;
