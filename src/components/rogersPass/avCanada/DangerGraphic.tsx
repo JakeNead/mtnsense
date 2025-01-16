@@ -33,6 +33,25 @@ function getDangerSvg(level: string) {
   }
 }
 
+function getDangerColor(level: string) {
+  switch (level) {
+    case "low":
+      return "rgb(88 182 84)";
+    case "moderate":
+      return "rgb(255 240 53)";
+    case "considerable":
+      return "rgb(245 148 49)";
+    case "high":
+      return "rgb(235 33 46)";
+    case "extreme":
+      return "purple";
+    case "no rating":
+      return "white";
+    default:
+      return "white";
+  }
+}
+
 function capitalize(str: string) {
   if (!str) return str;
   const lowerCase = str.toLowerCase();
@@ -175,7 +194,9 @@ export default function DangerGraphic({ report }: AvCanProps) {
             x="18"
             width="301"
             height="37"
-            fill="#FFF200"
+            fill={getDangerColor(
+              report.dangerRatings[0].ratings.alp.rating.value
+            )}
             stroke="#231F20"
             strokeWidth="0.5"
             strokeMiterlimit="10"
@@ -203,7 +224,9 @@ export default function DangerGraphic({ report }: AvCanProps) {
             x="18"
             width="281"
             height="37"
-            fill="#50B848"
+            fill={getDangerColor(
+              report.dangerRatings[0].ratings.tln.rating.value
+            )}
             stroke="#231F20"
             strokeWidth="0.5"
             strokeMiterlimit="10"
@@ -231,7 +254,9 @@ export default function DangerGraphic({ report }: AvCanProps) {
             x="18"
             width="261"
             height="37"
-            fill="#50B848"
+            fill={getDangerColor(
+              report.dangerRatings[0].ratings.btl.rating.value
+            )}
             stroke="#231F20"
             strokeWidth="0.5"
             strokeMiterlimit="10"
