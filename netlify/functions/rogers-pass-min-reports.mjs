@@ -3,6 +3,14 @@ import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Response } from "node-fetch";
 
+// 1/21/25 added netlify chromium plugin
+
+function replaceUrlSegment(url) {
+  const oldSegment = "map?panel=mountain-information-network-submissions";
+  const newSegment = "mountain-information-network/submissions";
+  return url.replace(oldSegment, newSegment);
+}
+
 export default async () => {
   chromium.setGraphicsMode = false;
   chromium.setHeadlessMode = true;
@@ -17,9 +25,9 @@ export default async () => {
     },
   });
 
-  try {
-    const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
+  const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
+  try {
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
@@ -39,75 +47,77 @@ export default async () => {
 
     // Find the Selkirk reports and get the first three links
     const selkirkLinks = await page.evaluate(() => {
+      console.log("evaluating links");
       const links = [];
       const rows = Array.from(document.querySelectorAll("tr"));
       rows.forEach((row) => {
         const cells = row.querySelectorAll("td");
-        if (
-          cells.length > 0 &&
-          cells[cells.length - 2].textContent.trim() === "Selkirks"
-        ) {
+        if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
           const anchor = cells[0].querySelector("a");
           if (anchor) {
             const href = anchor.getAttribute("href");
-            if (href && href.startsWith("/")) {
+            if (href) {
               links.push("https://avalanche.ca" + href);
             }
           }
         }
       });
-      return links.slice(0, 3); // Keep only the first three links
+      return links.slice(0, 3); // Keep first 3 links
     });
 
-    console.log("selkrirksLinks: ", selkirkLinks);
+    //update link urls
+    const updatedSelkirkLinks = selkirkLinks.map((link) =>
+      replaceUrlSegment(link)
+    );
 
-    const reportContent = [];
+    let reportContent;
 
-    for (const link of selkirkLinks) {
-      try {
-        const newPage = await browser.newPage();
-        await newPage.goto(link, { waitUntil: "networkidle0" });
-        console.log("Visiting selkirks link", link);
+    for (const link of updatedSelkirkLinks) {
+      await page.goto(link, { waitUntil: "networkidle0" });
 
-        const content = await newPage.evaluate(() => {
-          const getTextContent = (text) => {
-            const element = Array.from(
-              document.querySelectorAll("dt, h4")
-            ).find((el) => el.textContent.trim() === text);
-            if (!element) return null;
+      reportContent = await page.evaluate((link) => {
+        const getDate = (text) => {
+          const element = Array.from(document.querySelectorAll("dt")).find(
+            (el) => el.textContent.trim() === text
+          );
+          if (!element) return null;
 
-            // Get the next sibling element
-            const nextElement = element.nextElementSibling;
-            if (!nextElement) return null;
-            console.log("nextElement: ", nextElement);
+          return element.nextElementSibling.textContent.trim();
+        };
 
-            // Check if the next sibling is a <dd> with <li> children or a <div> with <p> children
-            if (nextElement.tagName === "dd") {
-              const liElements = nextElement.querySelectorAll("li");
-              return Array.from(liElements).map((li) => li.textContent.trim());
-            } else if (nextElement.tagName === "div") {
-              const pElements = nextElement.querySelectorAll("p");
-              return Array.from(pElements).map((p) => p.textContent.trim());
-            }
+        const getTextContent = (text) => {
+          const element = Array.from(document.querySelectorAll("h4")).find(
+            (el) => el.textContent.trim() === text
+          );
+          if (!element) return null;
 
-            return null;
-          };
+          const nextElement = element.nextElementSibling;
+          if (!nextElement) return null;
 
-          const comments = getTextContent("COMMENTS");
-          // const avalancheConditions = getTextContent("Avalanche conditions");
-          console.log(comments);
+          // if no child nodes
+          if (!!nextElement.hasChildNodes) {
+            return nextElement.textContent.trim();
+          } else if (nextElement.tagName === "dd") {
+            const liElements = nextElement.querySelectorAll("li");
+            return Array.from(liElements).map((li) => li.textContent.trim());
+          } else if (nextElement.tagName === "div") {
+            const pElements = nextElement.querySelectorAll("p");
+            return Array.from(pElements).map((p) => p.textContent.trim());
+          }
 
-          return { comments };
-        });
+          // return null;
+        };
 
-        reportContent.push(content);
-        // await page.goBack({ waitUntil: "networkidle0" });
-        await newPage.close();
-      } catch (err) {
-        console.error("Error navigating to link: ", link, err);
-      }
+        const date = getDate("Observations date");
+        const comments = getTextContent("Comments");
+
+        return { date, comments };
+      });
+      reportContent.link = link;
+      // console.log("content: ", content);
     }
 
+    ///// s3 code /////
     const key = `rogers-pass-min-report/latest.json`;
 
     const params = {
@@ -118,6 +128,7 @@ export default async () => {
     };
 
     await s3.send(new PutObjectCommand(params));
+    ///// s3 code /////
 
     await browser.close();
 
@@ -135,9 +146,7 @@ export default async () => {
     );
   } catch (error) {
     console.error("Error updating avalanche MIN reports:", error);
-    if (browser) {
-      await browser.close();
-    }
+
     if (isLocal) return;
     return new Response(
       JSON.stringify("Rogers Pass MIN reports update failed"),
