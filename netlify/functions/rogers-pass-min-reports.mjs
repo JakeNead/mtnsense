@@ -75,7 +75,7 @@ export default async () => {
     for (const link of updatedSelkirkLinks) {
       await page.goto(link, { waitUntil: "networkidle0" });
 
-      reportContent = await page.evaluate((link) => {
+      reportContent = await page.evaluate(() => {
         const getDate = (text) => {
           const element = Array.from(document.querySelectorAll("dt")).find(
             (el) => el.textContent.trim() === text
@@ -132,7 +132,7 @@ export default async () => {
 
     await browser.close();
 
-    if (isLocal) return;
+    if (isLocal) return undefined;
     return new Response(
       JSON.stringify({
         message: "Rogers Pass MIN report successfully updated",
@@ -147,9 +147,9 @@ export default async () => {
   } catch (error) {
     console.error("Error updating avalanche MIN reports:", error);
 
-    if (isLocal) return;
+    if (isLocal) return undefined;
     return new Response(
-      JSON.stringify("Rogers Pass MIN reports update failed"),
+      JSON.stringify({ error: "Rogers Pass MIN reports update failed" }),
       {
         status: 500,
         headers: {
@@ -157,6 +157,8 @@ export default async () => {
         },
       }
     );
+  } finally {
+    if (browser) await browser.close();
   }
 };
 
