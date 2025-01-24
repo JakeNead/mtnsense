@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { Response } from "node-fetch";
+// import { Response } from "node-fetch";
 
 // 1/21/25 added netlify chromium plugin
 
