@@ -29,9 +29,7 @@ export default async () => {
 
   try {
     browser = await puppeteer.launch({
-      args: isLocal
-        ? puppeteer.defaultArgs()
-        : [...chromium.args, "--no-sandbox"],
+      args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath:
         process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
@@ -76,10 +74,12 @@ export default async () => {
     let reportContent = [];
 
     for (const link of updatedSelkirkLinks) {
-      if (page.isClosed) {
-        throw new Error("Page was closed unexpectedly");
-      }
+      // if (page.isClosed) {
+      //   throw new Error("Page was closed unexpectedly");
+      // }
       await safeGoto(page, link, { waitUntil: "networkidle0", timeout: 60000 });
+
+      await page.waitForSelector("h4");
 
       const content = await page.evaluate(() => {
         const getDate = (text) => {
