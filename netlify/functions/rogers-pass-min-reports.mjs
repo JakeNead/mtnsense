@@ -29,7 +29,9 @@ export default async () => {
 
   try {
     browser = await puppeteer.launch({
-      args: isLocal ? puppeteer.defaultArgs() : chromium.args,
+      args: isLocal
+        ? puppeteer.defaultArgs()
+        : [...chromium.args, "--no-sandbox"],
       defaultViewport: chromium.defaultViewport,
       executablePath:
         process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
@@ -42,6 +44,7 @@ export default async () => {
       "https://avalanche.ca/mountain-information-network/submissions",
       {
         waitUntil: "networkidle0",
+        timeout: 60000,
       }
     );
 
@@ -70,12 +73,15 @@ export default async () => {
       replaceUrlSegment(link)
     );
 
-    let reportContent;
+    let reportContent = [];
 
     for (const link of updatedSelkirkLinks) {
-      await page.goto(link, { waitUntil: "networkidle0" });
+      if (page.isClosed) {
+        throw new Error("Page was closed unexpectedly");
+      }
+      await safeGoto(page, link, { waitUntil: "networkidle0", timeout: 60000 });
 
-      reportContent = await page.evaluate(() => {
+      const content = await page.evaluate(() => {
         const getDate = (text) => {
           const element = Array.from(document.querySelectorAll("dt")).find(
             (el) => el.textContent.trim() === text
@@ -113,8 +119,9 @@ export default async () => {
 
         return { date, comments };
       });
-      reportContent.link = link;
-      // console.log("content: ", content);
+      content.link = link;
+      reportContent.push(content);
+      console.log("reportContent: ", reportContent);
     }
 
     ///// s3 code /////
@@ -161,6 +168,19 @@ export default async () => {
     if (browser) await browser.close();
   }
 };
+
+async function safeGoto(page, url, options = {}) {
+  const retries = 3; // Number of retries
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await page.goto(url, options);
+      return; // Exit if successful
+    } catch (error) {
+      console.error(`Attempt ${attempt} failed:`, error);
+      if (attempt === retries) throw error; // Rethrow after retries
+    }
+  }
+}
 
 export const config = {
   schedule: "*/5 * * * *",
