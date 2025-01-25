@@ -15,7 +15,7 @@ export default async () => {
   try {
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath:
