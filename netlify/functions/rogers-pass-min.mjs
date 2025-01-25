@@ -10,6 +10,8 @@ function replaceUrlSegment(url) {
 }
 
 export default async () => {
+  chromium.setGraphicsMode = false;
+  chromium.setHeadlessMode = true;
   try {
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
@@ -40,9 +42,11 @@ export default async () => {
     console.log(selkirkLinks);
   } catch (err) {
     console.log("Error: ", err);
+  } finally {
+    if (browser) await browser.close();
   }
 };
 
 export const config = {
-  schedule: "*/1 * * * *",
+  schedule: "*/2 * * * *",
 };
