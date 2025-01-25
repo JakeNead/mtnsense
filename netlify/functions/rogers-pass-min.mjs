@@ -22,6 +22,12 @@ export default async () => {
         process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
       headless: chromium.headless,
     });
+    console.log(
+      "puppeteer.defaultArgs(): ",
+      puppeteer.defaultArgs(),
+      "chromium.args: ",
+      chromium.args
+    );
 
     const page = await browser.newPage();
 
@@ -33,25 +39,28 @@ export default async () => {
       }
     );
 
+    console.log("page.goto executed");
+
     // Find the Selkirk reports and get the first three links
     const selkirkLinks = await page.evaluate(() => {
-      console.log("evaluating links");
-      const links = [];
-      const rows = Array.from(document.querySelectorAll("tr"));
-      rows.forEach((row) => {
-        const cells = row.querySelectorAll("td");
-        if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
-          const anchor = cells[0].querySelector("a");
-          if (anchor) {
-            const href = anchor.getAttribute("href");
-            if (href) {
-              links.push("https://avalanche.ca" + href);
-            }
-          }
-        }
-      });
-      return links.slice(0, 3); // Keep first 3 links
+      //   const links = [];
+      //   const rows = Array.from(document.querySelectorAll("tr"));
+      //   rows.forEach((row) => {
+      //     const cells = row.querySelectorAll("td");
+      //     if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
+      //       const anchor = cells[0].querySelector("a");
+      //       if (anchor) {
+      //         const href = anchor.getAttribute("href");
+      //         if (href) {
+      //           links.push("https://avalanche.ca" + href);
+      //         }
+      //       }
+      //     }
+      //   });
+      //   return links.slice(0, 3); // Keep first 3 links
     });
+
+    console.log("page.evaluate executed");
 
     const updatedSelkirkLinks = selkirkLinks.map((link) =>
       replaceUrlSegment(link)
