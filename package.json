@@ -17,7 +17,6 @@
     "@emotion/styled": "^11.14.0",
     "@netlify/functions": "^2.8.2",
     "@sparticuz/chromium": "^131.0.1",
-    "@sparticuz/chromium-min": "^131.0.1",
     "@types/express": "^5.0.0",
     "cors": "^2.8.5",
     "dompurify": "^3.2.3",
