@@ -11,6 +11,8 @@ function replaceUrlSegment(url) {
 
 export default async () => {
   try {
+    const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
+
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
@@ -42,5 +44,5 @@ export default async () => {
 };
 
 export const config = {
-  schedule: "*/4 * * * *",
+  schedule: "*/1 * * * *",
 };
