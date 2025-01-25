@@ -10,18 +10,8 @@ function replaceUrlSegment(url) {
 }
 
 export default async () => {
-  chromium.setGraphicsMode = false;
-  chromium.setHeadlessMode = true;
   try {
-    const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
-
-    browser = await puppeteer.launch({
-      args: isLocal ? puppeteer.defaultArgs() : chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath:
-        process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
-      headless: chromium.headless,
-    });
+    browser = await puppeteer.launch();
 
     const page = await browser.newPage();
 
@@ -40,56 +30,6 @@ export default async () => {
     });
 
     console.log(selkirkLinks);
-
-    const updatedSelkirkLinks = selkirkLinks.map((link) =>
-      replaceUrlSegment(link)
-    );
-    console.log("updatedSelkirkLinks: ", updatedSelkirkLinks);
-
-    let reportContent = [];
-
-    // const content = await page.evaluate(() => {
-    //   const getDate = (text) => {
-    //     const element = Array.from(document.querySelectorAll("dt")).find(
-    //       (el) => el.textContent.trim() === text
-    //     );
-    //     if (!element) return null;
-
-    //     return element.nextElementSibling.textContent.trim();
-    //   };
-
-    //   const getTextContent = (text) => {
-    //     const element = Array.from(document.querySelectorAll("h4")).find(
-    //       (el) => el.textContent.trim() === text
-    //     );
-    //     if (!element) return null;
-
-    //     const nextElement = element.nextElementSibling;
-    //     if (!nextElement) return null;
-
-    //     // if no child nodes
-    //     if (!!nextElement.hasChildNodes) {
-    //       return nextElement.textContent.trim();
-    //     } else if (nextElement.tagName === "dd") {
-    //       const liElements = nextElement.querySelectorAll("li");
-    //       return Array.from(liElements).map((li) => li.textContent.trim());
-    //     } else if (nextElement.tagName === "div") {
-    //       const pElements = nextElement.querySelectorAll("p");
-    //       return Array.from(pElements).map((p) => p.textContent.trim());
-    //     }
-
-    //     // return null;
-    //   };
-
-    //   const date = getDate("Observations date");
-    //   const comments = getTextContent("Comments");
-
-    //   return { date, comments };
-    // });
-
-    // content.link = link;
-    // reportContent.push(content);
-    // console.log("reportContent: ", reportContent);
   } catch (err) {
     console.log("Error: ", err);
   }
