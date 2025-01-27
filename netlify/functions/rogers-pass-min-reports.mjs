@@ -42,7 +42,6 @@ export default async () => {
       "https://avalanche.ca/mountain-information-network/submissions",
       {
         waitUntil: "networkidle0",
-        timeout: 60000,
       }
     );
 
