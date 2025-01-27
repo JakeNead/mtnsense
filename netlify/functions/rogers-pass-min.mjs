@@ -34,15 +34,15 @@ export default async () => {
 
     console.log("page.goto executed");
 
-    // const selkirkLinks = await page.evaluate(() => {
-    //   return "SelkirkLinks evaluated";
-    // });
+    const selkirkLinks = await page.evaluate(() => {
+      const h1 = document.querySelector("h1");
 
-    // await page.close();
+      return h1 ? h1.textContent : null;
+    });
 
-    // console.log(selkirkLinks);
+    console.log(selkirkLinks);
   } catch (err) {
-    console.log(err);
+    console.error(err);
   } finally {
     if (browser) await browser.close();
   }
