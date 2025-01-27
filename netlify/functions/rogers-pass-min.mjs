@@ -28,19 +28,19 @@ export default async () => {
     await page.goto(
       "https://avalanche.ca/mountain-information-network/submissions",
       {
-        waitUntil: "networkidle0",
-        timeout: 60000,
+        waitUntil: "domcontentloaded",
       }
     );
 
     console.log("page.goto executed");
-    await page.waitForTimeout(2000);
 
-    const selkirkLinks = await page.evaluate(() => {
-      return "SelkirkLinks evaluated";
-    });
+    // const selkirkLinks = await page.evaluate(() => {
+    //   return "SelkirkLinks evaluated";
+    // });
 
-    console.log(selkirkLinks);
+    // await page.close();
+
+    // console.log(selkirkLinks);
   } catch (err) {
     console.log(err);
   } finally {
