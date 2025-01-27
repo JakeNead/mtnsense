@@ -57,7 +57,7 @@ export default async () => {
     });
 
     const updatedLinks = selkirkLinks.map((link) => replaceUrlSegment(link));
-    console.log(updatedLinks);
+    console.log("updatedLinks: ", updatedLinks);
   } catch (err) {
     console.error(err);
   } finally {
