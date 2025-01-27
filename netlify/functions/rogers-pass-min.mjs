@@ -26,33 +26,38 @@ export default async () => {
     const page = await browser.newPage();
 
     await page.goto(
-      "https://avalanche.ca/mountain-information-network/submissions",
-      {
-        waitUntil: "domcontentloaded",
-      }
+      "https://avalanche.ca/mountain-information-network/submissions"
+    );
+    await page.waitForFunction(() =>
+      Array.from(document.querySelectorAll("tr td:nth-child(5)")).some(
+        (cell) => cell.textContent.trim() === "Selkirks"
+      )
     );
 
     const selkirkLinks = await page.evaluate(() => {
       const links = [];
+      // get all rows
       const rows = Array.from(document.querySelectorAll("tr"));
-      // if (rows.length > 3) rows.slice(0, 3);
-      // rows.forEach((row) => {
-      //   const cells = row.querySelectorAll("td");
-      //   if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
-      //     const anchor = cells[0].querySelector("a");
-      //     if (anchor) {
-      //       const href = anchor.getAttribute("href");
-      //       if (href) {
-      //         links.push("https://avalanche.ca" + href);
-      //       }
-      //     }
-      //   }
-      // });
-      // return links;
-      return rows;
+      // find the selkirk rows
+      rows.forEach((row) => {
+        // cells is all elements in each row
+        const cells = row.querySelectorAll("td");
+        if (cells.length > 4 && cells[4].textContent.trim() === "Selkirks") {
+          const anchor = cells[0].querySelector("a");
+          if (anchor) {
+            const href = anchor.getAttribute("href");
+            if (href) {
+              links.push("https://avalanche.ca" + href);
+            }
+          }
+        }
+      });
+
+      return links;
     });
 
-    console.log(selkirkLinks);
+    const updatedLinks = selkirkLinks.map((link) => replaceUrlSegment(link));
+    console.log(updatedLinks);
   } catch (err) {
     console.error(err);
   } finally {
