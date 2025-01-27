@@ -34,6 +34,7 @@ export default async () => {
     );
 
     console.log("page.goto executed");
+    await page.waitForTimeout(2000);
 
     const selkirkLinks = await page.evaluate(() => {
       return "SelkirkLinks evaluated";
@@ -41,7 +42,7 @@ export default async () => {
 
     console.log(selkirkLinks);
   } catch (err) {
-    console.log("Error: ", err);
+    console.log(err);
   } finally {
     if (browser) await browser.close();
   }
