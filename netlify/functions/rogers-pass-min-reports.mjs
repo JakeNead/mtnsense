@@ -47,22 +47,23 @@ export default async () => {
 
     // Find the Selkirk reports and get the first three links
     const selkirkLinks = await page.evaluate(() => {
-      console.log("evaluating links");
       const links = [];
       const rows = Array.from(document.querySelectorAll("tr"));
-      rows.forEach((row) => {
-        const cells = row.querySelectorAll("td");
-        if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
-          const anchor = cells[0].querySelector("a");
-          if (anchor) {
-            const href = anchor.getAttribute("href");
-            if (href) {
-              links.push("https://avalanche.ca" + href);
-            }
-          }
-        }
-      });
-      return links.slice(0, 3); // Keep first 3 links
+      if (rows.length > 3) rows.slice(0, 3);
+      // rows.forEach((row) => {
+      //   const cells = row.querySelectorAll("td");
+      //   if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
+      //     const anchor = cells[0].querySelector("a");
+      //     if (anchor) {
+      //       const href = anchor.getAttribute("href");
+      //       if (href) {
+      //         links.push("https://avalanche.ca" + href);
+      //       }
+      //     }
+      //   }
+      // });
+      // return links;
+      return rows;
     });
 
     //update link urls

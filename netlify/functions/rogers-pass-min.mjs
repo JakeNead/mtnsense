@@ -32,25 +32,24 @@ export default async () => {
       }
     );
 
-    console.log("page.goto executed");
-
     const selkirkLinks = await page.evaluate(() => {
       const links = [];
       const rows = Array.from(document.querySelectorAll("tr"));
-      if (rows.length > 3) rows.slice(0, 3);
-      rows.forEach((row) => {
-        const cells = row.querySelectorAll("td");
-        if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
-          const anchor = cells[0].querySelector("a");
-          if (anchor) {
-            const href = anchor.getAttribute("href");
-            if (href) {
-              links.push("https://avalanche.ca" + href);
-            }
-          }
-        }
-      });
-      return links;
+      // if (rows.length > 3) rows.slice(0, 3);
+      // rows.forEach((row) => {
+      //   const cells = row.querySelectorAll("td");
+      //   if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
+      //     const anchor = cells[0].querySelector("a");
+      //     if (anchor) {
+      //       const href = anchor.getAttribute("href");
+      //       if (href) {
+      //         links.push("https://avalanche.ca" + href);
+      //       }
+      //     }
+      //   }
+      // });
+      // return links;
+      return rows;
     });
 
     console.log(selkirkLinks);
