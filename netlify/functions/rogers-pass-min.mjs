@@ -35,9 +35,22 @@ export default async () => {
     console.log("page.goto executed");
 
     const selkirkLinks = await page.evaluate(() => {
-      const h1 = document.querySelector("h1");
-
-      return h1 ? h1.textContent : null;
+      const links = [];
+      const rows = Array.from(document.querySelectorAll("tr"));
+      if (rows.length > 3) rows.slice(0, 3);
+      rows.forEach((row) => {
+        const cells = row.querySelectorAll("td");
+        if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
+          const anchor = cells[0].querySelector("a");
+          if (anchor) {
+            const href = anchor.getAttribute("href");
+            if (href) {
+              links.push("https://avalanche.ca" + href);
+            }
+          }
+        }
+      });
+      return links;
     });
 
     console.log(selkirkLinks);
