@@ -49,21 +49,19 @@ export default async () => {
     const selkirkLinks = await page.evaluate(() => {
       const links = [];
       const rows = Array.from(document.querySelectorAll("tr"));
-      if (rows.length > 3) rows.slice(0, 3);
-      // rows.forEach((row) => {
-      //   const cells = row.querySelectorAll("td");
-      //   if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
-      //     const anchor = cells[0].querySelector("a");
-      //     if (anchor) {
-      //       const href = anchor.getAttribute("href");
-      //       if (href) {
-      //         links.push("https://avalanche.ca" + href);
-      //       }
-      //     }
-      //   }
-      // });
-      // return links;
-      return rows;
+      rows.forEach((row) => {
+        const cells = row.querySelectorAll("td");
+        if (cells.length > 0 && cells[4].textContent.trim() === "Selkirks") {
+          const anchor = cells[0].querySelector("a");
+          if (anchor) {
+            const href = anchor.getAttribute("href");
+            if (href) {
+              links.push("https://avalanche.ca" + href);
+            }
+          }
+        }
+      });
+      return links.slice(0, 3); // Keep first 3 links
     });
 
     //update link urls
@@ -77,7 +75,7 @@ export default async () => {
       // if (page.isClosed) {
       //   throw new Error("Page was closed unexpectedly");
       // }
-      await safeGoto(page, link, { waitUntil: "networkidle0", timeout: 60000 });
+      await safeGoto(page, link, { waitUntil: "networkidle0" });
 
       await page.waitForSelector("h4");
 
