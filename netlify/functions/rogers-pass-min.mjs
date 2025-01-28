@@ -59,23 +59,23 @@ export default async () => {
     const updatedLinks = selkirkLinks.map((link) => replaceUrlSegment(link));
     const reports = [];
 
-    for (const link of updatedLinks) {
-      await page.goto(link);
+    // for (const link of updatedLinks) {
+    await page.goto(updatedLinks[0]);
 
-      const report = await page.evaluate(() => {
-        const obj = {};
-        obj.date = (() => {
-          const element = Array.from(document.querySelectorAll("dt")).find(
-            (el) => el.textContent.trim() === "Observations date"
-          );
-          if (!element) return null;
+    const report = await page.evaluate(() => {
+      const obj = {};
+      obj.date = (() => {
+        const element = Array.from(document.querySelectorAll("dt")).find(
+          (el) => el.textContent.trim() === "Observations date"
+        );
+        if (!element) return null;
 
-          return element.nextElementSibling.textContent.trim();
-        })();
-        return obj;
-      });
-      reports.push(report);
-    }
+        return element.nextElementSibling.textContent.trim();
+      })();
+      return obj;
+    });
+    reports.push(report);
+    // }
 
     console.log(reports);
   } catch (err) {
