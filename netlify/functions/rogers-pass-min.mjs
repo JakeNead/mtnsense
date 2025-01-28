@@ -60,8 +60,12 @@ export default async () => {
     const reports = [];
 
     for (const link of updatedLinks) {
+      let newPage;
       try {
-        await page.goto(updatedLinks[0], { waitUntil: "networkidle0" });
+        newPage = await browser.newPage();
+        await newPage.goto(updatedLinks[0], { waitUntil: "networkidle0" });
+
+        await newPage.waitForSelector("dt", { timeout: 10000 });
 
         const report = await page.evaluate(() => {
           const obj = {};
@@ -78,6 +82,8 @@ export default async () => {
         reports.push(report);
       } catch (err) {
         console.error(err);
+      } finally {
+        if (newPage) await newPage.close();
       }
     }
 
