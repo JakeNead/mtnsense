@@ -53,11 +53,31 @@ export default async () => {
         }
       });
 
-      return links;
+      return links.slice(0, 3);
     });
 
     const updatedLinks = selkirkLinks.map((link) => replaceUrlSegment(link));
-    console.log("updatedLinks: ", updatedLinks);
+    const reports = [];
+
+    for (const link of updatedLinks) {
+      await page.goto(link);
+
+      const report = await page.evaluate(() => {
+        const obj = {};
+        obj.date = (() => {
+          const element = Array.from(document.querySelectorAll("dt")).find(
+            (el) => el.textContent.trim() === "Observations date"
+          );
+          if (!element) return null;
+
+          return element.nextElementSibling.textContent.trim();
+        })();
+        return obj;
+      });
+      reports.push(report);
+    }
+
+    console.log(reports);
   } catch (err) {
     console.error(err);
   } finally {
