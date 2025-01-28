@@ -63,6 +63,8 @@ export default async () => {
       let newPage;
       try {
         newPage = await browser.newPage();
+        //new
+        await newpage.setRequestInterception(false);
         await newPage.goto(updatedLinks[0], { waitUntil: "networkidle0" });
 
         await newPage.waitForSelector("dt", { timeout: 10000 });
