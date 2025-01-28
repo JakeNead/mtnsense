@@ -3,6 +3,7 @@ import chromium from "@sparticuz/chromium";
 
 let browser;
 
+//old segment routes to map version of report
 function replaceUrlSegment(url) {
   const oldSegment = "map?panel=mountain-information-network-submissions";
   const newSegment = "mountain-information-network/submissions";
@@ -15,6 +16,7 @@ export default async () => {
   try {
     const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
+    // These browser settings work for other scheduled functions
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
@@ -28,12 +30,8 @@ export default async () => {
     await page.goto(
       "https://avalanche.ca/mountain-information-network/submissions"
     );
-    await page.waitForFunction(() =>
-      Array.from(document.querySelectorAll("tr td:nth-child(5)")).some(
-        (cell) => cell.textContent.trim() === "Selkirks"
-      )
-    );
 
+    // This returns an array of three selkirk links
     const selkirkLinks = await page.evaluate(() => {
       const links = [];
       // get all rows
@@ -59,17 +57,19 @@ export default async () => {
     const updatedLinks = selkirkLinks.map((link) => replaceUrlSegment(link));
     const reports = [];
 
+    // The for loop gives me two errors, 10s after each loop
+    // "Error: Navigating frame was detached" and
+    // "Error: Protocol error: Connection closed. Most likely the page has been closed."
     for (const link of updatedLinks) {
       let newPage;
+
       try {
         newPage = await browser.newPage();
-        //new
-        await newPage.setRequestInterception(false);
-        await newPage.goto(updatedLinks[0], { waitUntil: "networkidle0" });
 
-        await newPage.waitForSelector("dt", { timeout: 10000 });
+        await newPage.goto(link, { waitUntil: "networkidle0" });
 
-        const report = await page.evaluate(() => {
+        await newPage.waitForSelector("dt");
+        const report = await newPage.evaluate(() => {
           const obj = {};
           obj.date = (() => {
             const element = Array.from(document.querySelectorAll("dt")).find(
@@ -81,6 +81,7 @@ export default async () => {
           })();
           return obj;
         });
+
         reports.push(report);
       } catch (err) {
         console.error(err);
@@ -88,7 +89,6 @@ export default async () => {
         if (newPage) await newPage.close();
       }
     }
-
     console.log(reports);
   } catch (err) {
     console.error(err);
