@@ -18,7 +18,10 @@ export default async () => {
 
     // These browser settings work for other scheduled functions
     browser = await puppeteer.launch({
-      args: isLocal ? puppeteer.defaultArgs() : chromium.args,
+      args: [
+        isLocal ? puppeteer.defaultArgs() : chromium.args,
+        "--disable-features=site-per-process",
+      ],
       defaultViewport: chromium.defaultViewport,
       executablePath:
         process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
@@ -62,13 +65,13 @@ export default async () => {
     // "Error: Protocol error: Connection closed. Most likely the page has been closed."
     for (const link of updatedLinks) {
       let newPage;
-
       try {
         newPage = await browser.newPage();
 
         await newPage.goto(link, { waitUntil: "networkidle0" });
 
         await newPage.waitForSelector("dt");
+
         const report = await newPage.evaluate(() => {
           const obj = {};
           obj.date = (() => {
