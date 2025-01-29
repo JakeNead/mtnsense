@@ -18,10 +18,7 @@ export default async () => {
 
     // These browser settings work for other scheduled functions
     browser = await puppeteer.launch({
-      args: [
-        isLocal ? puppeteer.defaultArgs() : chromium.args,
-        "--disable-features=site-per-process",
-      ],
+      args: isLocal ? puppeteer.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath:
         process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath()),
