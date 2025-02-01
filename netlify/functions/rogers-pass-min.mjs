@@ -61,32 +61,28 @@ export default async () => {
     // "Error: Navigating frame was detached" and
     // "Error: Protocol error: Connection closed. Most likely the page has been closed."
     for (const link of updatedLinks) {
-      let newPage;
       try {
-        newPage = await browser.newPage();
+        await page.goto(link, { waitUntil: "networkidle0" });
 
-        await newPage.goto(link, { waitUntil: "networkidle0" });
+        await page.waitForSelector("dt");
 
-        await newPage.waitForSelector("dt");
-
-        const report = await newPage.evaluate(() => {
+        const report = await page.evaluate(() => {
           const obj = {};
-          obj.date = (() => {
-            const element = Array.from(document.querySelectorAll("dt")).find(
-              (el) => el.textContent.trim() === "Observations date"
-            );
-            if (!element) return null;
+          const dtArr = Array.from(document.querySelectorAll("dt"));
+          const dateEl = dtArr
+            ? dtArr.find((el) => el.textContent.trim() === "Observations date")
+            : null;
+          const dateContent = dateEl
+            ? dateEl.nextElementSibling.textContent.trim()
+            : null;
+          obj.date = dateContent;
 
-            return element.nextElementSibling.textContent.trim();
-          })();
           return obj;
         });
 
         reports.push(report);
       } catch (err) {
         console.error(err);
-      } finally {
-        if (newPage) await newPage.close();
       }
     }
     console.log(reports);
