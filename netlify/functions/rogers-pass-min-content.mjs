@@ -39,6 +39,10 @@ export default async () => {
 
       const report = await page.evaluate(() => {
         const obj = {};
+        // title
+        const h1 = document.querySelector("h1").textContent;
+        obj.title = h1;
+
         // date
         const dtArr = Array.from(document.querySelectorAll("dt"));
         const dateEl = dtArr
@@ -48,6 +52,7 @@ export default async () => {
           ? dateEl.nextElementSibling.textContent.trim()
           : null;
         obj.date = dateContent;
+
         // author
         const authorEl = dtArr
           ? dtArr.find((el) => el.textContent.trim() === "Submitted by")
@@ -56,6 +61,7 @@ export default async () => {
           ? authorEl.nextElementSibling.textContent.trim()
           : null;
         obj.author = authorContent;
+
         // comments
         const h4 = Array.from(document.querySelectorAll("h4"));
         const commentEl = h4
