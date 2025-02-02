@@ -4,12 +4,13 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Response } from "node-fetch";
 
 let browser;
+let isLocal;
 
 export default async () => {
   chromium.setGraphicsMode = false;
   chromium.setHeadlessMode = true;
   try {
-    const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
+    isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
@@ -37,7 +38,7 @@ export default async () => {
 
       await page.waitForSelector("dt");
 
-      const report = await page.evaluate(() => {
+      const report = await page.evaluate((link) => {
         const obj = {};
         // title
         const h1 = document.querySelector("h1").textContent;
@@ -70,6 +71,9 @@ export default async () => {
         const commentContent = commentEl.nextElementSibling.textContent.trim();
         obj.comments = commentContent;
 
+        // link
+        obj.link = link;
+
         return obj;
       });
 
@@ -94,6 +98,7 @@ export default async () => {
       ContentType: "application/json",
     };
     await s3.send(new PutObjectCommand(params));
+
     if (isLocal) return undefined;
     return new Response(
       JSON.stringify({
@@ -108,6 +113,7 @@ export default async () => {
     );
   } catch (err) {
     console.error(err);
+    if (isLocal) return undefined;
     return new Response(
       JSON.stringify({ message: "MIN report links update failed" }),
       {
