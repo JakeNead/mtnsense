@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { Response } from "node-fetch";
+// import { Response } from "node-fetch";
 
 let browser;
 let isLocal;
@@ -25,6 +25,7 @@ export default async () => {
     const response = await fetch(
       "https://mtnsense.s3.us-west-2.amazonaws.com/rogers-pass/min-links.json"
     );
+
     if (!response.ok)
       throw new Error(
         "Something went wrong fetching the rogers pass MIN links"
@@ -102,17 +103,12 @@ export default async () => {
     console.log("reports: ", reports);
 
     if (isLocal) return undefined;
-    return new Response(
-      JSON.stringify({
+    return {
+      status: 200,
+      body: JSON.stringify({
         message: "MIN report content successfully updated",
       }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    };
   } catch (err) {
     console.error(err);
     if (isLocal) return undefined;
