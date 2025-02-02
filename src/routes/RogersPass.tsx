@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "../App.css";
-import { Text, Heading, Image, Box, Flex } from "@chakra-ui/react";
+import { Text, Heading, Image, Box, Flex, Link } from "@chakra-ui/react";
+import { LuExternalLink } from "react-icons/lu";
 // import { useColorModeValue } from "../components/ui/color-mode";
 import AvCan from "../components/rogersPass/avCanada/RogersPassAvy";
 import { AvyData, Report } from "../interfaces/AvyReport";
@@ -10,7 +11,8 @@ interface AvyReport {
   title: string;
   date: string;
   author: string;
-  body: string[];
+  comments: string;
+  link: string;
 }
 
 function RogersPass() {
@@ -21,7 +23,7 @@ function RogersPass() {
     async function fetchReport() {
       try {
         const response = await fetch(
-          "https://mtnsense.s3.us-west-2.amazonaws.com/rogers-pass-report/latest.json"
+          "https://mtnsense.s3.us-west-2.amazonaws.com/rogers-pass/min-content.json"
         );
         if (!response.ok)
           throw new Error(`Something went wrong. Status: ${response.status}`);
@@ -71,22 +73,22 @@ function RogersPass() {
             <Box key={index} maxW="95vw" p=".5rem" m="1rem 0">
               <Text fontWeight="bold" mb="0.5rem">
                 {obj.title}
+                <Link alignSelf="start" paddingLeft=".5rem" href={obj.link}>
+                  <LuExternalLink />
+                </Link>
               </Text>
               <Text mb="0.5rem">{obj.date}</Text>
-              <Text mb="1rem">{obj.author}</Text>
-              <Box
+              <Text mb="1rem">By {obj.author}</Text>
+              <Text
                 maxW="850px"
-                dangerouslySetInnerHTML={{
-                  __html: Array.isArray(obj.body)
-                    ? obj.body.join("")
-                    : obj.body,
-                }}
                 css={{
                   "& p": {
                     marginBottom: ".8rem",
                   },
                 }}
-              />
+              >
+                {obj.comments}
+              </Text>
             </Box>
           ))
         ) : (
