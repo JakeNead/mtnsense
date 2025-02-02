@@ -4,7 +4,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Response } from "node-fetch";
 
 let browser;
-
+let isLocal;
 //old segment routes to map version of report
 function replaceUrlSegment(url) {
   const oldSegment = "map?panel=mountain-information-network-submissions";
@@ -15,7 +15,7 @@ function replaceUrlSegment(url) {
 export default async () => {
   chromium.setGraphicsMode = false;
   chromium.setHeadlessMode = true;
-  let isLocal;
+
   try {
     isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
