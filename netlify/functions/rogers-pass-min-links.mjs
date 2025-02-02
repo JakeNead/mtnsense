@@ -15,8 +15,9 @@ function replaceUrlSegment(url) {
 export default async () => {
   chromium.setGraphicsMode = false;
   chromium.setHeadlessMode = true;
+  let isLocal;
   try {
-    const isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
+    isLocal = !!process.env.CHROME_EXECUTABLE_PATH;
 
     browser = await puppeteer.launch({
       args: isLocal ? puppeteer.defaultArgs() : chromium.args,
