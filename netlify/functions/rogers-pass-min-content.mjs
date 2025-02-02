@@ -75,7 +75,7 @@ export default async () => {
         obj.link = link;
 
         return obj;
-      });
+      }, link);
 
       reports.push(report);
     }
@@ -98,6 +98,8 @@ export default async () => {
       ContentType: "application/json",
     };
     await s3.send(new PutObjectCommand(params));
+
+    console.log("reports: ", reports);
 
     if (isLocal) return undefined;
     return new Response(
