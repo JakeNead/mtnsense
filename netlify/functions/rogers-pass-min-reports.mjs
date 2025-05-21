@@ -181,5 +181,5 @@ async function safeGoto(page, url, options = {}) {
 }
 
 export const config = {
-  schedule: "*/5 * * * *",
+  schedule: "0 0 * * *",
 };

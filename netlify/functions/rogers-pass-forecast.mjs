@@ -75,5 +75,5 @@ export default async () => {
 
 // converts from serverless function to scheduled function
 export const config = {
-  schedule: "0 */2 * * *",
+  schedule: "0 0 * * *",
 };

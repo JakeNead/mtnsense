@@ -1,7 +1,6 @@
 import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-// import { Response } from "node-fetch";
 
 let browser;
 let isLocal;
@@ -69,7 +68,9 @@ export default async () => {
         const commentEl = h4
           ? h4.find((el) => el.textContent.trim() === "Comments")
           : null;
-        const commentContent = commentEl.nextElementSibling.textContent.trim();
+        const commentContent = commentEl
+          ? commentEl.nextElementSibling.textContent.trim()
+          : null;
         obj.comments = commentContent;
 
         // link
@@ -127,5 +128,5 @@ export default async () => {
 };
 
 export const config = {
-  schedule: "*/4 * * * *",
+  schedule: "0 0 * * *",
 };
